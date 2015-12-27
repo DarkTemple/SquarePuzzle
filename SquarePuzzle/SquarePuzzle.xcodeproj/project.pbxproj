@@ -1,0 +1,552 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3C1A73051C2CE682007568E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A73041C2CE682007568E6 /* main.m */; };
+		3C1A73081C2CE682007568E6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A73071C2CE682007568E6 /* AppDelegate.m */; };
+		3C1A730B1C2CE682007568E6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A730A1C2CE682007568E6 /* ViewController.m */; };
+		3C1A730E1C2CE682007568E6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C1A730C1C2CE682007568E6 /* Main.storyboard */; };
+		3C1A73101C2CE682007568E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C1A730F1C2CE682007568E6 /* Assets.xcassets */; };
+		3C1A73131C2CE682007568E6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C1A73111C2CE682007568E6 /* LaunchScreen.storyboard */; };
+		3C1A731E1C2CE682007568E6 /* SquarePuzzleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A731D1C2CE682007568E6 /* SquarePuzzleTests.m */; };
+		3C1A73291C2CE682007568E6 /* SquarePuzzleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A73281C2CE682007568E6 /* SquarePuzzleUITests.m */; };
+		3C1A73381C2CF15A007568E6 /* SquarePuzzleSolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A73371C2CF15A007568E6 /* SquarePuzzleSolver.m */; };
+		BBBBEB071C2FB79D000A6F3A /* GridUnitView.m in Sources */ = {isa = PBXBuildFile; fileRef = BBBBEB061C2FB79D000A6F3A /* GridUnitView.m */; };
+		BBBBEB0A1C2FBDCC000A6F3A /* XLCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = BBBBEB091C2FBDCC000A6F3A /* XLCycleScrollView.m */; };
+		BBBBEB0D1C2FD152000A6F3A /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = BBBBEB0C1C2FD152000A6F3A /* MBProgressHUD.m */; };
+		BBBBEB101C2FD774000A6F3A /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = BBBBEB0F1C2FD774000A6F3A /* UIView+Toast.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3C1A731A1C2CE682007568E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C1A72F81C2CE682007568E6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3C1A72FF1C2CE682007568E6;
+			remoteInfo = SquarePuzzle;
+		};
+		3C1A73251C2CE682007568E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C1A72F81C2CE682007568E6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3C1A72FF1C2CE682007568E6;
+			remoteInfo = SquarePuzzle;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3C1A73001C2CE682007568E6 /* SquarePuzzle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SquarePuzzle.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C1A73041C2CE682007568E6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3C1A73061C2CE682007568E6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		3C1A73071C2CE682007568E6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		3C1A73091C2CE682007568E6 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		3C1A730A1C2CE682007568E6 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		3C1A730D1C2CE682007568E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3C1A730F1C2CE682007568E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3C1A73121C2CE682007568E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3C1A73141C2CE682007568E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3C1A73191C2CE682007568E6 /* SquarePuzzleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SquarePuzzleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C1A731D1C2CE682007568E6 /* SquarePuzzleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SquarePuzzleTests.m; sourceTree = "<group>"; };
+		3C1A731F1C2CE682007568E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3C1A73241C2CE682007568E6 /* SquarePuzzleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SquarePuzzleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C1A73281C2CE682007568E6 /* SquarePuzzleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SquarePuzzleUITests.m; sourceTree = "<group>"; };
+		3C1A732A1C2CE682007568E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3C1A73361C2CF15A007568E6 /* SquarePuzzleSolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SquarePuzzleSolver.h; sourceTree = "<group>"; };
+		3C1A73371C2CF15A007568E6 /* SquarePuzzleSolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SquarePuzzleSolver.m; sourceTree = "<group>"; };
+		BBBBEB051C2FB79D000A6F3A /* GridUnitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridUnitView.h; sourceTree = "<group>"; };
+		BBBBEB061C2FB79D000A6F3A /* GridUnitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridUnitView.m; sourceTree = "<group>"; };
+		BBBBEB081C2FBDCC000A6F3A /* XLCycleScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XLCycleScrollView.h; sourceTree = "<group>"; };
+		BBBBEB091C2FBDCC000A6F3A /* XLCycleScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XLCycleScrollView.m; sourceTree = "<group>"; };
+		BBBBEB0B1C2FD152000A6F3A /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		BBBBEB0C1C2FD152000A6F3A /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		BBBBEB0E1C2FD774000A6F3A /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
+		BBBBEB0F1C2FD774000A6F3A /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3C1A72FD1C2CE682007568E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C1A73161C2CE682007568E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C1A73211C2CE682007568E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3C1A72F71C2CE682007568E6 = {
+			isa = PBXGroup;
+			children = (
+				3C1A73021C2CE682007568E6 /* SquarePuzzle */,
+				3C1A731C1C2CE682007568E6 /* SquarePuzzleTests */,
+				3C1A73271C2CE682007568E6 /* SquarePuzzleUITests */,
+				3C1A73011C2CE682007568E6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3C1A73011C2CE682007568E6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3C1A73001C2CE682007568E6 /* SquarePuzzle.app */,
+				3C1A73191C2CE682007568E6 /* SquarePuzzleTests.xctest */,
+				3C1A73241C2CE682007568E6 /* SquarePuzzleUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3C1A73021C2CE682007568E6 /* SquarePuzzle */ = {
+			isa = PBXGroup;
+			children = (
+				BBBBEB051C2FB79D000A6F3A /* GridUnitView.h */,
+				BBBBEB061C2FB79D000A6F3A /* GridUnitView.m */,
+				BBBBEB0B1C2FD152000A6F3A /* MBProgressHUD.h */,
+				BBBBEB0C1C2FD152000A6F3A /* MBProgressHUD.m */,
+				BBBBEB0E1C2FD774000A6F3A /* UIView+Toast.h */,
+				BBBBEB0F1C2FD774000A6F3A /* UIView+Toast.m */,
+				BBBBEB081C2FBDCC000A6F3A /* XLCycleScrollView.h */,
+				BBBBEB091C2FBDCC000A6F3A /* XLCycleScrollView.m */,
+				3C1A73361C2CF15A007568E6 /* SquarePuzzleSolver.h */,
+				3C1A73371C2CF15A007568E6 /* SquarePuzzleSolver.m */,
+				3C1A73061C2CE682007568E6 /* AppDelegate.h */,
+				3C1A73071C2CE682007568E6 /* AppDelegate.m */,
+				3C1A73091C2CE682007568E6 /* ViewController.h */,
+				3C1A730A1C2CE682007568E6 /* ViewController.m */,
+				3C1A730C1C2CE682007568E6 /* Main.storyboard */,
+				3C1A730F1C2CE682007568E6 /* Assets.xcassets */,
+				3C1A73111C2CE682007568E6 /* LaunchScreen.storyboard */,
+				3C1A73141C2CE682007568E6 /* Info.plist */,
+				3C1A73031C2CE682007568E6 /* Supporting Files */,
+			);
+			path = SquarePuzzle;
+			sourceTree = "<group>";
+		};
+		3C1A73031C2CE682007568E6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3C1A73041C2CE682007568E6 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3C1A731C1C2CE682007568E6 /* SquarePuzzleTests */ = {
+			isa = PBXGroup;
+			children = (
+				3C1A731D1C2CE682007568E6 /* SquarePuzzleTests.m */,
+				3C1A731F1C2CE682007568E6 /* Info.plist */,
+			);
+			path = SquarePuzzleTests;
+			sourceTree = "<group>";
+		};
+		3C1A73271C2CE682007568E6 /* SquarePuzzleUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3C1A73281C2CE682007568E6 /* SquarePuzzleUITests.m */,
+				3C1A732A1C2CE682007568E6 /* Info.plist */,
+			);
+			path = SquarePuzzleUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3C1A72FF1C2CE682007568E6 /* SquarePuzzle */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C1A732D1C2CE682007568E6 /* Build configuration list for PBXNativeTarget "SquarePuzzle" */;
+			buildPhases = (
+				3C1A72FC1C2CE682007568E6 /* Sources */,
+				3C1A72FD1C2CE682007568E6 /* Frameworks */,
+				3C1A72FE1C2CE682007568E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SquarePuzzle;
+			productName = SquarePuzzle;
+			productReference = 3C1A73001C2CE682007568E6 /* SquarePuzzle.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3C1A73181C2CE682007568E6 /* SquarePuzzleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C1A73301C2CE682007568E6 /* Build configuration list for PBXNativeTarget "SquarePuzzleTests" */;
+			buildPhases = (
+				3C1A73151C2CE682007568E6 /* Sources */,
+				3C1A73161C2CE682007568E6 /* Frameworks */,
+				3C1A73171C2CE682007568E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3C1A731B1C2CE682007568E6 /* PBXTargetDependency */,
+			);
+			name = SquarePuzzleTests;
+			productName = SquarePuzzleTests;
+			productReference = 3C1A73191C2CE682007568E6 /* SquarePuzzleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3C1A73231C2CE682007568E6 /* SquarePuzzleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C1A73331C2CE682007568E6 /* Build configuration list for PBXNativeTarget "SquarePuzzleUITests" */;
+			buildPhases = (
+				3C1A73201C2CE682007568E6 /* Sources */,
+				3C1A73211C2CE682007568E6 /* Frameworks */,
+				3C1A73221C2CE682007568E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3C1A73261C2CE682007568E6 /* PBXTargetDependency */,
+			);
+			name = SquarePuzzleUITests;
+			productName = SquarePuzzleUITests;
+			productReference = 3C1A73241C2CE682007568E6 /* SquarePuzzleUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3C1A72F81C2CE682007568E6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = Alipay;
+				TargetAttributes = {
+					3C1A72FF1C2CE682007568E6 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					3C1A73181C2CE682007568E6 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 3C1A72FF1C2CE682007568E6;
+					};
+					3C1A73231C2CE682007568E6 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 3C1A72FF1C2CE682007568E6;
+					};
+				};
+			};
+			buildConfigurationList = 3C1A72FB1C2CE682007568E6 /* Build configuration list for PBXProject "SquarePuzzle" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3C1A72F71C2CE682007568E6;
+			productRefGroup = 3C1A73011C2CE682007568E6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3C1A72FF1C2CE682007568E6 /* SquarePuzzle */,
+				3C1A73181C2CE682007568E6 /* SquarePuzzleTests */,
+				3C1A73231C2CE682007568E6 /* SquarePuzzleUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3C1A72FE1C2CE682007568E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C1A73131C2CE682007568E6 /* LaunchScreen.storyboard in Resources */,
+				3C1A73101C2CE682007568E6 /* Assets.xcassets in Resources */,
+				3C1A730E1C2CE682007568E6 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C1A73171C2CE682007568E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C1A73221C2CE682007568E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3C1A72FC1C2CE682007568E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BBBBEB101C2FD774000A6F3A /* UIView+Toast.m in Sources */,
+				BBBBEB0A1C2FBDCC000A6F3A /* XLCycleScrollView.m in Sources */,
+				3C1A730B1C2CE682007568E6 /* ViewController.m in Sources */,
+				3C1A73381C2CF15A007568E6 /* SquarePuzzleSolver.m in Sources */,
+				3C1A73081C2CE682007568E6 /* AppDelegate.m in Sources */,
+				3C1A73051C2CE682007568E6 /* main.m in Sources */,
+				BBBBEB071C2FB79D000A6F3A /* GridUnitView.m in Sources */,
+				BBBBEB0D1C2FD152000A6F3A /* MBProgressHUD.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C1A73151C2CE682007568E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C1A731E1C2CE682007568E6 /* SquarePuzzleTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C1A73201C2CE682007568E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C1A73291C2CE682007568E6 /* SquarePuzzleUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3C1A731B1C2CE682007568E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3C1A72FF1C2CE682007568E6 /* SquarePuzzle */;
+			targetProxy = 3C1A731A1C2CE682007568E6 /* PBXContainerItemProxy */;
+		};
+		3C1A73261C2CE682007568E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3C1A72FF1C2CE682007568E6 /* SquarePuzzle */;
+			targetProxy = 3C1A73251C2CE682007568E6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3C1A730C1C2CE682007568E6 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3C1A730D1C2CE682007568E6 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3C1A73111C2CE682007568E6 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3C1A73121C2CE682007568E6 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3C1A732B1C2CE682007568E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		3C1A732C1C2CE682007568E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3C1A732E1C2CE682007568E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = SquarePuzzle/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alipay.test.SquarePuzzle;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3C1A732F1C2CE682007568E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = SquarePuzzle/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alipay.test.SquarePuzzle;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		3C1A73311C2CE682007568E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = SquarePuzzleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alipay.test.SquarePuzzleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SquarePuzzle.app/SquarePuzzle";
+			};
+			name = Debug;
+		};
+		3C1A73321C2CE682007568E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = SquarePuzzleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alipay.test.SquarePuzzleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SquarePuzzle.app/SquarePuzzle";
+			};
+			name = Release;
+		};
+		3C1A73341C2CE682007568E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = SquarePuzzleUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alipay.test.SquarePuzzleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = SquarePuzzle;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		3C1A73351C2CE682007568E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = SquarePuzzleUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alipay.test.SquarePuzzleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = SquarePuzzle;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3C1A72FB1C2CE682007568E6 /* Build configuration list for PBXProject "SquarePuzzle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C1A732B1C2CE682007568E6 /* Debug */,
+				3C1A732C1C2CE682007568E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C1A732D1C2CE682007568E6 /* Build configuration list for PBXNativeTarget "SquarePuzzle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C1A732E1C2CE682007568E6 /* Debug */,
+				3C1A732F1C2CE682007568E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C1A73301C2CE682007568E6 /* Build configuration list for PBXNativeTarget "SquarePuzzleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C1A73311C2CE682007568E6 /* Debug */,
+				3C1A73321C2CE682007568E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C1A73331C2CE682007568E6 /* Build configuration list for PBXNativeTarget "SquarePuzzleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C1A73341C2CE682007568E6 /* Debug */,
+				3C1A73351C2CE682007568E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3C1A72F81C2CE682007568E6 /* Project object */;
+}
