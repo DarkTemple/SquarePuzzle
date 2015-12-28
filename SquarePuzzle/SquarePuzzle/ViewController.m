@@ -12,7 +12,14 @@
 #import "MBProgressHUD.h"
 #import "UIView+Toast.h"
 
+typedef void (*Func)(id sender, SEL sel, ...);
+
 static const NSTimeInterval kToastDuration = 1.f;
+
+#define LOOP 90000000
+#define START { clock_t start, end; start = clock();
+#define END end = clock(); \
+printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 
 @interface ViewController () <XLCycleScrollViewDatasource, XLCycleScrollViewDelegate>
 @property (nonatomic, strong) NSArray <UIView *> *allSolViews;
@@ -23,10 +30,48 @@ static const NSTimeInterval kToastDuration = 1.f;
 
 @implementation ViewController
 
+- (void)_internalCall{
+    // Do nothing...
+}
+
+- (void) testObjectiveCMethod {
+    START
+    
+    for (NSUInteger i = 0; i < LOOP; ++i) {
+        [self _internalCall];
+    }  
+    
+    END  
+}
+
+- (void) testCCall {
+    
+    SEL sel = @selector(_internalCall);
+//    Func call = [self methodForSelector:@selector(_internalCall)];
+    IMP imp = [self methodForSelector:@selector(_internalCall)];
+    
+    
+    START
+    
+    for (NSUInteger i = 0; i < LOOP; ++i) {
+//        (Func)(call)(self, sel);
+//        (*call)(self, sel);
+        ((void (*)(id sender, SEL sel, ...))imp)(self, sel);
+//        (void (*)(id sender, SEL sel))(*call)(self, sel);
+//        (void(*)(id, SEL)(call))(self, sel);
+    }
+    
+    END  
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 
+//    [self testObjectiveCMethod];
+//    [self testCCall];
+//    return;
+    
     [self _initAllBlocks];
     
     self.segCtrl = [[UISegmentedControl alloc] initWithItems:@[@"Case1", @"Case2", @"Case3", @"Case4"]];
@@ -41,7 +86,7 @@ static const NSTimeInterval kToastDuration = 1.f;
     self.view.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:self.scrollView];
     
-    [self testCase1];
+    [self testCase2];
 }
 
 - (void)segSelected:(id)sender
@@ -110,6 +155,7 @@ static const NSTimeInterval kToastDuration = 1.f;
             [self.view addSubview:self.segCtrl];
 
             [self.view makeToast:[NSString stringWithFormat:@"Elapsed time : %f ms", time*1000] duration:kToastDuration position:CSToastPositionCenter];
+            NSLog(@"Elapsed time : %f ms", time*1000);
         });
     });
 }
@@ -171,6 +217,7 @@ static const NSTimeInterval kToastDuration = 1.f;
             [self.view addSubview:self.segCtrl];
             
             [self.view makeToast:[NSString stringWithFormat:@"Elapsed time : %f ms", time*1000] duration:kToastDuration position:CSToastPositionCenter];
+            NSLog(@"Elapsed time : %f ms", time*1000);
         });
     });
 }
@@ -231,6 +278,7 @@ static const NSTimeInterval kToastDuration = 1.f;
             [self.view addSubview:self.segCtrl];
             
             [self.view makeToast:[NSString stringWithFormat:@"Elapsed time : %f ms", time*1000] duration:kToastDuration position:CSToastPositionCenter];
+            NSLog(@"Elapsed time : %f ms", time*1000);
         });
     });
 }
@@ -281,6 +329,7 @@ static const NSTimeInterval kToastDuration = 1.f;
             [self.view addSubview:self.segCtrl];
             
             [self.view makeToast:[NSString stringWithFormat:@"Elapsed time : %f ms", time*1000] duration:kToastDuration position:CSToastPositionCenter];
+            NSLog(@"Elapsed time : %f ms", time*1000);
         });
     });
 }
