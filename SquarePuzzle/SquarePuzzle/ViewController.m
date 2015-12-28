@@ -12,6 +12,25 @@
 #import "MBProgressHUD.h"
 #import "UIView+Toast.h"
 
+
+void matrixRotation(int a[3][3],int n)
+{
+    for(int layer=0;layer<n;layer++) {
+        int first=layer;
+        int last = n-layer-1;
+        for(int i=first;i<last;i++)
+        {
+            int offset=i-first;
+            int top =a[first][i];
+            a[first][i]=a[last-offset][first];//left->top
+            a[last-offset][first]=a[last][last-offset];//bottom->left
+            a[last][last-offset]=a[i][last];//right->bottom
+            a[i][last]=top;//top->right
+        }
+    }
+}
+
+
 typedef void (*Func)(id sender, SEL sel, ...);
 
 static const NSTimeInterval kToastDuration = 1.f;
@@ -68,6 +87,14 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 
+    int a[3][3] = {{0,1,1},
+                   {0,0,1},
+                   {1,0,0},
+                };
+    
+    matrixRotation(a, 3);
+    
+    return;
 //    [self testObjectiveCMethod];
 //    [self testCCall];
 //    return;

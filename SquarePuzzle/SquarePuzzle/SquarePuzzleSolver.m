@@ -187,6 +187,25 @@ static NSInteger rotateSquareCounter = 0;
     return rotate;
 }
 
+- (void)rotateClockwiseInplace
+{
+//    if (self.width == self.height) {
+//        int n = self.width;
+//        for (int layer=0; layer<n; layer++) {
+//            int first=layer;
+//            int last = n-layer-1;
+//            for (int i=first; i<last; i++) {
+//                int offset = i-first;
+//                SquareUnit *top = self.unitArr[first][i];
+//                self.unitArr[first][i] = self.unitArr[last-offset][first];//left->top
+//                self.unitArr[last-offset][first] = self.unitArr[last][last-offset];//bottom->left
+//                self.unitArr[last][last-offset]=self.unitArr[i][last];//right->bottom
+//                self.unitArr[i][last]=top;//top->right
+//            }
+//        }
+//    }
+}
+
 - (SquareBlock *)reverseBlock
 {
     NSMutableArray *squareArr = [NSMutableArray squareArrayWithWidth:self.width height:self.height];

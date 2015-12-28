@@ -41,6 +41,8 @@ typedef NS_ENUM(NSInteger, SquareUnitState) {
 
 - (instancetype)initWithSquarShapeArr:(NSArray <NSArray <SquareUnit *> *> *)shapeArr;
 - (SquareBlock *)rotateClockwise;
+- (void)rotateClockwiseInplace;
+
 - (SquareBlock *)reverseBlock;
 @end
 
