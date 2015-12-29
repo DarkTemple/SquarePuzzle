@@ -14,6 +14,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000);}
 #define OPTIMIZE_BLOCK_TRANSFORM
 #define OPTIMIZE_MSGSEND
 #define OPTIMIZE_WIDTH_HEIGHT_GETTER
+#define OPTIMIZE_SQUARE_ROTATE
 
 #import "SquarePuzzleSolver.h"
 #import <objc/runtime.h>
@@ -49,6 +50,11 @@ static NSInteger rotateSquareCounter = 0;
 
 + (NSMutableArray <NSMutableArray <SquareUnit *> *> *)squareArrayWithWidth:(NSInteger)width height:(NSInteger)height
 {
+#ifdef OPTIMIZE_SQUARE_ROTATE
+    width = MAX(width, height);
+    height = width;
+#endif
+    
     NSMutableArray <NSMutableArray <SquareUnit *> *> *squareArr = [NSMutableArray arrayWithCapacity:height];
     for (int i=0; i<height; i++) {
         NSMutableArray <SquareUnit *>*rowArr = [NSMutableArray arrayWithCapacity:width];
@@ -68,6 +74,8 @@ static NSInteger rotateSquareCounter = 0;
 {
     NSInteger _width;
     NSInteger _height;
+    NSInteger _startX;
+    NSInteger _startY;
 @public
     IMP rotateSquareIMP;
     SEL rotateSquareSEL;
@@ -144,6 +152,8 @@ static NSInteger rotateSquareCounter = 0;
         _width = shapeArr[0].count;
         rotateSquareSEL = @selector(rotateClockwise);
         rotateSquareIMP = [self methodForSelector:rotateSquareSEL];
+        _startX = 0;
+        _startY = 0;
     }
     
     return self;
@@ -158,52 +168,64 @@ static NSInteger rotateSquareCounter = 0;
 {
     for (int i=0; i<self.height; i++) {
         for (int j=0; j<self.width; j++) {
-            if (self.unitArr[i][j].unitState == SquareUnitStateFull) {
-                printf("%ld    ", [self.blockID integerValue]);
-            } else {
-                printf("%ld    ", 0);
-            }
+//            if (self.unitArr[i][j].unitState == SquareUnitStateFull) {
+//                printf("%ld    ", [self.blockID integerValue]);
+//            } else {
+//                printf("%ld    ", 0);
+//            }
+            printf("%ld    ", self.unitArr[i][j].unitState);
         }
         
         printf("\n");
     }
     
+    printf("%d\t%d", _startX, _startY);
+    
     printf("\n");
 }
 
-- (SquareBlock *)rotateClockwise
-{
-    rotateSquareCounter++;
-    NSMutableArray *squareArr = [NSMutableArray squareArrayWithWidth:self.height height:self.width];
-    for (int i=0; i<self.height; i++) {
-        for (int j=0; j<self.width; j++) {
-            squareArr[j][self.height-i-1] = [self.unitArr[i][j] copy];
-        }
-    }
-    
-    SquareBlock *rotate = [[SquareBlock alloc] initWithSquarShapeArr:squareArr];
-    rotate.blockID = self.blockID;
-    rotate.blockColor = self.blockColor;
-    return rotate;
-}
+//- (SquareBlock *)rotateClockwise
+//{
+//    rotateSquareCounter++;
+//    NSMutableArray *squareArr = [NSMutableArray squareArrayWithWidth:self.height height:self.width];
+//    for (int i=0; i<self.height; i++) {
+//        for (int j=0; j<self.width; j++) {
+//            squareArr[j][self.height-i-1] = [self.unitArr[i][j] copy];
+//        }
+//    }
+//    
+//    SquareBlock *rotate = [[SquareBlock alloc] initWithSquarShapeArr:squareArr];
+//    rotate.blockID = self.blockID;
+//    rotate.blockColor = self.blockColor;
+//    return rotate;
+//}
 
 - (void)rotateClockwiseInplace
 {
-//    if (self.width == self.height) {
-//        int n = self.width;
-//        for (int layer=0; layer<n; layer++) {
-//            int first=layer;
-//            int last = n-layer-1;
-//            for (int i=first; i<last; i++) {
-//                int offset = i-first;
-//                SquareUnit *top = self.unitArr[first][i];
-//                self.unitArr[first][i] = self.unitArr[last-offset][first];//left->top
-//                self.unitArr[last-offset][first] = self.unitArr[last][last-offset];//bottom->left
-//                self.unitArr[last][last-offset]=self.unitArr[i][last];//right->bottom
-//                self.unitArr[i][last]=top;//top->right
-//            }
-//        }
+    // min X to start Y
+    // max Y to start X
+    int maxY = 0;
+    int n = (int)self.width;
+    for (int layer=0; layer<n; layer++) {
+        int first = layer;
+        int last = n-layer-1;
+        for (int i=first; i<last; i++) {
+            int offset = i-first;
+            SquareUnit *top = [self.unitArr[first][i] copy];
+            self.unitArr[first][i].unitState = self.unitArr[last-offset][first].unitState; //left->top
+            self.unitArr[last-offset][first].unitState = self.unitArr[last][last-offset].unitState; //bottom->left
+            self.unitArr[last][last-offset].unitState = self.unitArr[i][last].unitState; //right->bottom
+            self.unitArr[i][last].unitState = top.unitState; //top->right
+        }
+    }
+
+    
+//    if (self.unitArr[i][j].unitState == SquareUnitStateFull || self.unitArr[i][self.width-j-1].unitState == SquareUnitStateFull) {
+//        maxY = MAX(maxY, i);
 //    }
+    
+    _startY = _startX;
+    _startX = maxY;
 }
 
 - (SquareBlock *)reverseBlock
@@ -219,6 +241,20 @@ static NSInteger rotateSquareCounter = 0;
     reverse.blockID = self.blockID;
     reverse.blockColor = self.blockColor;
     return reverse;
+}
+
+- (void)reverseBlockInplace
+{
+    for (int i=0; i<self.height; i++) {
+        for (int j=0; j<self.width/2; j++) {
+            SquareUnitState state = self.unitArr[i][j].unitState;
+            self.unitArr[i][j].unitState = self.unitArr[i][self.width-j-1].unitState;
+            self.unitArr[i][self.width-j-1].unitState = state;
+
+        }
+    }
+    
+
 }
 
 @end
@@ -253,7 +289,17 @@ static NSInteger rotateSquareCounter = 0;
     if (self = [super init]) {
         _width = width;
         _height = height;
-        _squareBoardArr = [NSMutableArray squareArrayWithWidth:width height:height];
+        NSMutableArray <NSMutableArray <SquareUnit *> *> *squareArr = [NSMutableArray arrayWithCapacity:height];
+        for (int i=0; i<height; i++) {
+            NSMutableArray <SquareUnit *>*rowArr = [NSMutableArray arrayWithCapacity:width];
+            for (int i=0; i<width; i++) {
+                [rowArr addObject:[SquareUnit new]];
+            }
+            
+            [squareArr addObject:rowArr];
+        }
+        
+        _squareBoardArr = squareArr;
         _allBlocks = [NSMutableArray array];
         _minUnitCount = minUnitCount;
         _solutions = [NSMutableSet set];

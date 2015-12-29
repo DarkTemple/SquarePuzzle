@@ -12,25 +12,6 @@
 #import "MBProgressHUD.h"
 #import "UIView+Toast.h"
 
-
-void matrixRotation(int a[3][3],int n)
-{
-    for(int layer=0;layer<n;layer++) {
-        int first=layer;
-        int last = n-layer-1;
-        for(int i=first;i<last;i++)
-        {
-            int offset=i-first;
-            int top =a[first][i];
-            a[first][i]=a[last-offset][first];//left->top
-            a[last-offset][first]=a[last][last-offset];//bottom->left
-            a[last][last-offset]=a[i][last];//right->bottom
-            a[i][last]=top;//top->right
-        }
-    }
-}
-
-
 typedef void (*Func)(id sender, SEL sel, ...);
 
 static const NSTimeInterval kToastDuration = 1.f;
@@ -86,18 +67,28 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-
-    int a[3][3] = {{0,1,1},
-                   {0,0,1},
-                   {1,0,0},
-                };
-    
-    matrixRotation(a, 3);
-    
-    return;
 //    [self testObjectiveCMethod];
 //    [self testCCall];
 //    return;
+    
+    
+    NSMutableArray <NSMutableArray <SquareUnit *> *> *shapeArr = [NSMutableArray squareArrayWithWidth:3 height:3];
+    shapeArr[0][0].unitState = 1;
+    shapeArr[0][1].unitState = 0;
+    shapeArr[0][2].unitState = 0;
+    shapeArr[1][0].unitState = 1;
+    shapeArr[1][1].unitState = 0;
+    shapeArr[1][2].unitState = 0;
+//    shapeArr[2][0].unitState = 1;
+//    shapeArr[2][1].unitState = 1;
+//    shapeArr[2][2].unitState = 0;
+    SquareBlock *block = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    
+    
+    [block rotateClockwiseInplace];
+    [block reverseBlockInplace];
+    
+    SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:2 height:2 minBlockUnitCount:5];
     
     [self _initAllBlocks];
     
@@ -113,7 +104,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     self.view.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:self.scrollView];
     
-    [self testCase2];
+    [self testCase1];
 }
 
 - (void)segSelected:(id)sender

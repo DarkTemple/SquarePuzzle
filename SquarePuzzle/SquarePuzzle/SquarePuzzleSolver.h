@@ -40,10 +40,11 @@ typedef NS_ENUM(NSInteger, SquareUnitState) {
 @property (nonatomic, strong) UIColor *blockColor;
 
 - (instancetype)initWithSquarShapeArr:(NSArray <NSArray <SquareUnit *> *> *)shapeArr;
-- (SquareBlock *)rotateClockwise;
+//- (SquareBlock *)rotateClockwise;
 - (void)rotateClockwiseInplace;
 
-- (SquareBlock *)reverseBlock;
+//- (SquareBlock *)reverseBlock;
+- (void)reverseBlockInplace;
 @end
 
 
