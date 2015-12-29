@@ -72,20 +72,18 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 //    return;
     
     
-    NSMutableArray <NSMutableArray <SquareUnit *> *> *shapeArr = [NSMutableArray squareArrayWithWidth:3 height:3];
-    shapeArr[0][0].unitState = 1;
-    shapeArr[0][1].unitState = 0;
-    shapeArr[0][2].unitState = 0;
+    NSMutableArray <NSMutableArray <SquareUnit *> *> *shapeArr = [NSMutableArray squareArrayWithWidth:4 height:4];
+//    shapeArr[0][0].unitState = 1;
     shapeArr[1][0].unitState = 1;
-    shapeArr[1][1].unitState = 0;
-    shapeArr[1][2].unitState = 0;
-//    shapeArr[2][0].unitState = 1;
+    shapeArr[2][0].unitState = 1;
+    shapeArr[3][0].unitState = 1;
+    shapeArr[3][1].unitState = 1;
 //    shapeArr[2][1].unitState = 1;
-//    shapeArr[2][2].unitState = 0;
+//    shapeArr[2][1].unitState = 1;
+//    shapeArr[2][2].unitState = 1;
     SquareBlock *block = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
-    
-    
-    [block rotateClockwiseInplace];
+
+//    [block rotateClockwiseInplace];
     [block reverseBlockInplace];
     
     SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:2 height:2 minBlockUnitCount:5];

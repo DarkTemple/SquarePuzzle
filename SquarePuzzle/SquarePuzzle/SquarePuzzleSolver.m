@@ -179,53 +179,62 @@ static NSInteger rotateSquareCounter = 0;
         printf("\n");
     }
     
-    printf("%d\t%d", _startX, _startY);
+    printf("%d\t%d", _startY, _startX);
     
     printf("\n");
 }
 
-//- (SquareBlock *)rotateClockwise
-//{
-//    rotateSquareCounter++;
-//    NSMutableArray *squareArr = [NSMutableArray squareArrayWithWidth:self.height height:self.width];
-//    for (int i=0; i<self.height; i++) {
-//        for (int j=0; j<self.width; j++) {
-//            squareArr[j][self.height-i-1] = [self.unitArr[i][j] copy];
-//        }
-//    }
-//    
-//    SquareBlock *rotate = [[SquareBlock alloc] initWithSquarShapeArr:squareArr];
-//    rotate.blockID = self.blockID;
-//    rotate.blockColor = self.blockColor;
-//    return rotate;
-//}
+- (SquareBlock *)rotateClockwise
+{
+    rotateSquareCounter++;
+    NSMutableArray *squareArr = [NSMutableArray squareArrayWithWidth:self.height height:self.width];
+    for (int i=0; i<self.height; i++) {
+        for (int j=0; j<self.width; j++) {
+            squareArr[j][self.height-i-1] = [self.unitArr[i][j] copy];
+        }
+    }
+    
+    SquareBlock *rotate = [[SquareBlock alloc] initWithSquarShapeArr:squareArr];
+    rotate.blockID = self.blockID;
+    rotate.blockColor = self.blockColor;
+    return rotate;
+}
 
 - (void)rotateClockwiseInplace
 {
-    // min X to start Y
-    // max Y to start X
-    int maxY = 0;
+    _startX = _startY = INT_MAX;
     int n = (int)self.width;
-    for (int layer=0; layer<n; layer++) {
-        int first = layer;
-        int last = n-layer-1;
-        for (int i=first; i<last; i++) {
-            int offset = i-first;
-            SquareUnit *top = [self.unitArr[first][i] copy];
-            self.unitArr[first][i].unitState = self.unitArr[last-offset][first].unitState; //left->top
-            self.unitArr[last-offset][first].unitState = self.unitArr[last][last-offset].unitState; //bottom->left
-            self.unitArr[last][last-offset].unitState = self.unitArr[i][last].unitState; //right->bottom
-            self.unitArr[i][last].unitState = top.unitState; //top->right
+    for (int i=0; i<n/2; i++) {
+        for (int j=i; j<n-i-1; j++) {
+            SquareUnitState first = self.unitArr[i][j].unitState;
+            int cur_i = i, cur_j = j;
+            int next_i = n-cur_j-1, next_j = i;
+            while (!(next_i == i && next_j == j)) {
+                SquareUnitState nextState = self.unitArr[next_i][next_j].unitState;
+                self.unitArr[cur_i][cur_j].unitState = nextState;
+                if (nextState == SquareUnitStateFull) {
+                    _startY = MIN(_startY, cur_i);
+                    _startX = MIN(_startX, cur_j);
+                }
+                
+                cur_i = next_i, cur_j = next_j;
+                next_i = n-cur_j-1, next_j = cur_i;
+            }
+            
+            self.unitArr[cur_i][cur_j].unitState = first;
+            if (first != SquareUnitStateEmpty) {
+                _startY = MIN(_startY, cur_i);
+                _startX = MIN(_startX, cur_j);
+            }
         }
     }
-
     
-//    if (self.unitArr[i][j].unitState == SquareUnitStateFull || self.unitArr[i][self.width-j-1].unitState == SquareUnitStateFull) {
-//        maxY = MAX(maxY, i);
-//    }
-    
-    _startY = _startX;
-    _startX = maxY;
+    if (n % 2) {
+        if (self.unitArr[n/2][n/2] != SquareUnitStateEmpty) {
+            _startY = MIN(_startY, n/2);
+            _startX = MIN(_startX, n/2);
+        }
+    }
 }
 
 - (SquareBlock *)reverseBlock
@@ -245,16 +254,24 @@ static NSInteger rotateSquareCounter = 0;
 
 - (void)reverseBlockInplace
 {
+    _startX = _startY = INT_MAX;
     for (int i=0; i<self.height; i++) {
         for (int j=0; j<self.width/2; j++) {
-            SquareUnitState state = self.unitArr[i][j].unitState;
-            self.unitArr[i][j].unitState = self.unitArr[i][self.width-j-1].unitState;
-            self.unitArr[i][self.width-j-1].unitState = state;
-
+            SquareUnitState stateA = self.unitArr[i][j].unitState;
+            SquareUnitState stateB = self.unitArr[i][self.width-j-1].unitState;
+            self.unitArr[i][j].unitState = stateB;
+            self.unitArr[i][self.width-j-1].unitState = stateA;
+            if (stateA == SquareUnitStateFull) {
+                _startY = MIN(_startY, i);
+                _startX = MIN(_startX, self.width-j-1);
+            }
+            
+            if (stateB == SquareUnitStateFull) {
+                _startY = MIN(_startY, i);
+                _startX = MIN(_startX, j);
+            }
         }
     }
-    
-
 }
 
 @end
