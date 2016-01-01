@@ -20,43 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SquarePuzzle/SquarePuzzleSolver.m"
-            timestampString = "473074168.268223"
+            timestampString = "473332618.659849"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "521"
-            endingLineNumber = "521"
-            landmarkName = "-removeBlock:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SquarePuzzle/SquarePuzzleSolver.m"
-            timestampString = "473074168.268223"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "383"
-            endingLineNumber = "383"
-            landmarkName = "-arrangeBlocks:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SquarePuzzle/SquarePuzzleSolver.m"
-            timestampString = "473074168.268223"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "463"
-            endingLineNumber = "463"
+            startingLineNumber = "574"
+            endingLineNumber = "574"
             landmarkName = "-arrangeBlock:atX:Y:"
             landmarkType = "5">
          </BreakpointContent>
@@ -67,13 +35,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SquarePuzzle/ViewController.m"
-            timestampString = "473072252.92808"
+            filePath = "SquarePuzzle/SquarePuzzleSolver.m"
+            timestampString = "473332618.659849"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
-            landmarkName = "-viewDidLoad"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
+            landmarkName = "-printSquare"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

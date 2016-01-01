@@ -73,7 +73,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     
     
     NSMutableArray <NSMutableArray <SquareUnit *> *> *shapeArr = [NSMutableArray squareArrayWithWidth:4 height:4];
-//    shapeArr[0][0].unitState = 1;
+    shapeArr[0][0].unitState = 1;
     shapeArr[1][0].unitState = 1;
     shapeArr[2][0].unitState = 1;
     shapeArr[3][0].unitState = 1;
@@ -81,8 +81,15 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 //    shapeArr[2][1].unitState = 1;
 //    shapeArr[2][1].unitState = 1;
 //    shapeArr[2][2].unitState = 1;
-    SquareBlock *block = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
+    block.blockID = @"1";
 
+    NSMutableSet *set = [NSMutableSet set];
+    [set addObject:block];
+    
+    [block rotateClockwiseInplace];
+    [set addObject:block];
+    
 //    [block rotateClockwiseInplace];
     [block reverseBlockInplace];
     
@@ -362,7 +369,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[0][2].unitState = SquareUnitStateFull;
     shapeArr[0][3].unitState = SquareUnitStateFull;
     shapeArr[0][4].unitState = SquareUnitStateFull;
-    SquareBlock *block1 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block1 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:5 height:1];
     block1.blockID = @"1";
     block1.blockColor = [UIColor colorWithRed:225/255.f green:190/255.f blue:224/255.f alpha:1];
     
@@ -374,7 +381,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
     shapeArr[1][3].unitState = SquareUnitStateFull;
-    SquareBlock *block2 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block2 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
     block2.blockID = @"2";
     block2.blockColor = [UIColor colorWithRed:241/255.f green:58/255.f blue:1/255.f alpha:1];
     
@@ -385,7 +392,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[0][2].unitState = SquareUnitStateFull;
     shapeArr[1][0].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
-    SquareBlock *block3 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block3 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:2];
     block3.blockID = @"3";
     block3.blockColor = [UIColor colorWithRed:254/255.f green:227/255.f blue:34/255.f alpha:1];
     
@@ -396,7 +403,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][2].unitState = SquareUnitStateFull;
     shapeArr[2][0].unitState = SquareUnitStateFull;
     shapeArr[2][1].unitState = SquareUnitStateFull;
-    SquareBlock *block4 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block4 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
     block4.blockID = @"4";
     block4.blockColor = [UIColor colorWithRed:173/255.f green:38/255.f blue:94/255.f alpha:1];
     
@@ -407,7 +414,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[0][2].unitState = SquareUnitStateFull;
     shapeArr[1][0].unitState = SquareUnitStateFull;
     shapeArr[2][0].unitState = SquareUnitStateFull;
-    SquareBlock *block5 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block5 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
     block5.blockID = @"5";
     block5.blockColor = [UIColor colorWithRed:4/255.f green:108/255.f blue:193/255.f alpha:1];
     
@@ -418,7 +425,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[0][2].unitState = SquareUnitStateFull;
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[2][1].unitState = SquareUnitStateFull;
-    SquareBlock *block6 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block6 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
     block6.blockID = @"6";
     block6.blockColor = [UIColor colorWithRed:41/255.f green:158/255.f blue:70/255.f alpha:1];
     //    [block6 printSquare];
@@ -430,7 +437,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[2][0].unitState = SquareUnitStateFull;
     shapeArr[3][0].unitState = SquareUnitStateFull;
     shapeArr[4][0].unitState = SquareUnitStateFull;
-    SquareBlock *block7 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block7 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:1 height:5];
     block7.blockID = @"7";
     block7.blockColor = [UIColor colorWithRed:197/255.f green:186/255.f blue:182/255.f alpha:1];
     //    [block7 printSquare];
@@ -442,7 +449,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
     shapeArr[2][1].unitState = SquareUnitStateFull;
-    SquareBlock *block8 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block8 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
     block8.blockID = @"8";
     block8.blockColor = [UIColor colorWithRed:253/255.f green:231/255.f blue:57/255.f alpha:1];
     //    [block8 printSquare];
@@ -454,7 +461,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
     shapeArr[1][3].unitState = SquareUnitStateFull;
-    SquareBlock *block9 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block9 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
     block9.blockID = @"9";
     block9.blockColor = [UIColor colorWithRed:15/255.f green:11/255.f blue:12/255.f alpha:1];
     //    [block9 printSquare];
@@ -466,7 +473,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
     shapeArr[2][1].unitState = SquareUnitStateFull;
-    SquareBlock *block10 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block10 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
     block10.blockID = @"10";
     block10.blockColor = [UIColor colorWithRed:227/255.f green:3/255.f blue:3/255.f alpha:1];
     //    [block10 printSquare];
@@ -478,7 +485,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[0][2].unitState = SquareUnitStateFull;
     shapeArr[0][3].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
-    SquareBlock *block11 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block11 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
     block11.blockID = @"11";
     block11.blockColor = [UIColor colorWithRed:91/255.f green:39/255.f blue:17/255.f alpha:1];
     //    [block11 printSquare];
@@ -490,7 +497,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[2][1].unitState = SquareUnitStateFull;
     shapeArr[2][2].unitState = SquareUnitStateFull;
-    SquareBlock *block12 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block12 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
     block12.blockID = @"12";
     block12.blockColor = [UIColor colorWithRed:183/255.f green:183/255.f blue:182/255.f alpha:1];
     //    [block12 printSquare];
@@ -502,7 +509,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[0][2].unitState = SquareUnitStateFull;
     shapeArr[1][0].unitState = SquareUnitStateFull;
     shapeArr[1][1].unitState = SquareUnitStateFull;
-    SquareBlock *block13 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr];
+    SquareBlock *block13 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:2];
     block13.blockID = @"13";
     block13.blockColor = [UIColor colorWithRed:104/255.f green:186/255.f blue:226/255.f alpha:1];
     

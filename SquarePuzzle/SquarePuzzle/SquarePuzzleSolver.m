@@ -11,10 +11,10 @@
 printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000);}
 
 
-#define OPTIMIZE_BLOCK_TRANSFORM
+#define OPTIMIZE_BLOCK_TRANSFORM_DUP
 #define OPTIMIZE_MSGSEND
 #define OPTIMIZE_WIDTH_HEIGHT_GETTER
-#define OPTIMIZE_SQUARE_ROTATE
+//#define OPTIMIZE_SQUARE_ROTATE
 
 #import "SquarePuzzleSolver.h"
 #import <objc/runtime.h>
@@ -74,37 +74,41 @@ static NSInteger rotateSquareCounter = 0;
 {
     NSInteger _width;
     NSInteger _height;
-    NSInteger _startX;
-    NSInteger _startY;
 @public
     IMP rotateSquareIMP;
     SEL rotateSquareSEL;
 }
 
 @property (nonatomic, strong) NSArray <NSArray <SquareUnit *> *> *shapeArr;
+@property (nonatomic) NSInteger startX;
+@property (nonatomic) NSInteger startY;
+
 @end
 
 
 @implementation SquareBlock
 
-- (id)copyWithZone:(NSZone *)zone
-{
-    SquareBlock *copy = [[[self class] allocWithZone:zone] initWithSquarShapeArr:[NSMutableArray squareArrayWithWidth:self.width height:self.height]];
-    copy.blockID = self.blockID;
-    copy.blockColor = self.blockColor;
-    for (int i=0; i<self.height; i++) {
-        for (int j=0; j<self.width; j++) {
-            copy.unitArr[i][j].unitState = self.unitArr[i][j].unitState;
-            copy.unitArr[i][j].blockID = self.unitArr[i][j].blockID;
-            copy.unitArr[i][j].blockColor = self.unitArr[i][j].blockColor;
-        }
-    }
-
-    return copy;
-}
+//- (id)copyWithZone:(NSZone *)zone
+//{
+//    SquareBlock *copy = [[[self class] allocWithZone:zone] initWithSquarShapeArr:[NSMutableArray squareArrayWithWidth:self.width height:self.height]];
+//    copy.blockID = self.blockID;
+//    copy.blockColor = self.blockColor;
+//    for (int i=0; i<self.height; i++) {
+//        for (int j=0; j<self.width; j++) {
+//            copy.unitArr[i][j].unitState = self.unitArr[i][j].unitState;
+//            copy.unitArr[i][j].blockID = self.unitArr[i][j].blockID;
+//            copy.unitArr[i][j].blockColor = self.unitArr[i][j].blockColor;
+//        }
+//    }
+//
+//    return copy;
+//}
 
 - (BOOL)isEqual:(id)object
 {
+#ifdef OPTIMIZE_SQUARE_ROTATE
+    return [super isEqual:object];
+#else
     SquareBlock *other = (SquareBlock *)object;
     if (self.width == other.width && self.height == other.height) {
         for (int i=0; i<self.height; i++) {
@@ -119,11 +123,29 @@ static NSInteger rotateSquareCounter = 0;
     }
     
     return YES;
+#endif
 }
 
 - (NSUInteger)hash
 {
+#ifdef OPTIMIZE_SQUARE_ROTATE
+    NSInteger signature = 0;
+    int n = (int)MAX(self.width, self.height);
+    for (int i=(int)self.startY; i<self.startY+n; i++) {
+        for (int j=(int)self.startX; j<self.startX+n; j++) {
+            NSInteger x = 0;
+            if (i < self.startY+self.height && j < self.startX+self.width) {
+                x = ((self.unitArr[i][j].unitState == SquareUnitStateFull) ? 1 : 0);
+            }
+            
+            signature = (signature << 1) + x;
+        }
+    }
+    
+    return signature;
+#else
     return [self.blockID integerValue];
+#endif
 }
 
 - (NSInteger)width
@@ -144,36 +166,64 @@ static NSInteger rotateSquareCounter = 0;
 #endif
 }
 
-- (instancetype)initWithSquarShapeArr:(NSArray <NSArray <SquareUnit *> *> *)shapeArr
+- (instancetype)initWithSquarShapeArr:(NSArray <NSArray <SquareUnit *> *> *)shapeArr width:(NSInteger)width height:(NSInteger)height
 {
     if (self = [super init]) {
         _shapeArr = shapeArr;
-        _height = shapeArr.count;
-        _width = shapeArr[0].count;
         rotateSquareSEL = @selector(rotateClockwise);
         rotateSquareIMP = [self methodForSelector:rotateSquareSEL];
+
+#ifdef OPTIMIZE_SQUARE_ROTATE
+        _height = height;
+        _width = width;
+#else
+        _height = shapeArr.count;
+        _width = shapeArr[0].count;
+#endif
+        
         _startX = 0;
         _startY = 0;
     }
     
     return self;
-};
+}
 
 - (NSArray <NSArray <SquareUnit *> *> *)unitArr
 {
     return self.shapeArr;
 }
 
+//- (NSString *)blockSignature
+//{
+//    NSMutableString *solStr = [NSMutableString string];
+//    for (int i=(int)self.startY; i<self.height; i++) {
+//        for (int j=(int)self.startX; j<self.width; j++) {
+//            if (self.unitArr[i][j].unitState == SquareUnitStateFull) {
+//                [solStr appendString:self.blockID];
+//            } else {
+//                [solStr appendString:@"0"];
+//            }
+//            
+//            if (!(i == self.height-1 && j == self.width-1)) {
+//                [solStr appendString:@","];
+//            }
+//        }
+//    }
+//    
+//    return [NSString stringWithString:solStr];
+//}
+
 - (void)printSquare
 {
-    for (int i=0; i<self.height; i++) {
-        for (int j=0; j<self.width; j++) {
-//            if (self.unitArr[i][j].unitState == SquareUnitStateFull) {
-//                printf("%ld    ", [self.blockID integerValue]);
-//            } else {
-//                printf("%ld    ", 0);
-//            }
-            printf("%ld    ", self.unitArr[i][j].unitState);
+    int n = (int)MAX(self.width, self.height);
+    for (int i=0; i<n; i++) {
+        for (int j=0; j<n; j++) {
+            if (self.unitArr[i][j].unitState == SquareUnitStateFull) {
+                printf("%ld    ", [self.blockID integerValue]);
+            } else {
+                printf("%ld    ", 0);
+            }
+//            printf("%ld    ", self.unitArr[i][j].unitState);
         }
         
         printf("\n");
@@ -194,7 +244,7 @@ static NSInteger rotateSquareCounter = 0;
         }
     }
     
-    SquareBlock *rotate = [[SquareBlock alloc] initWithSquarShapeArr:squareArr];
+    SquareBlock *rotate = [[SquareBlock alloc] initWithSquarShapeArr:squareArr width:self.height height:self.width];
     rotate.blockID = self.blockID;
     rotate.blockColor = self.blockColor;
     return rotate;
@@ -246,7 +296,7 @@ static NSInteger rotateSquareCounter = 0;
         }
     }
     
-    SquareBlock *reverse = [[SquareBlock alloc] initWithSquarShapeArr:squareArr];
+    SquareBlock *reverse = [[SquareBlock alloc] initWithSquarShapeArr:squareArr width:self.height height:self.width];
     reverse.blockID = self.blockID;
     reverse.blockColor = self.blockColor;
     return reverse;
@@ -399,43 +449,42 @@ static NSInteger rotateSquareCounter = 0;
     
     if (!blocks.count) {
         [self.solutions addObject:[self blockArrangement2String]];
-//        [self printSquare];
         return;
     }
     
-//    [self printSquare];
     BOOL arrange = NO;
     SquareBlock *block = blocks[0];
-    SquareBlock *origBlock = [block copy];
     [blocks removeObject:block];
     
     for (int i=0; i<self.height; i++) {
         for (int j=0; j<self.width; j++) {
-
-#ifdef OPTIMIZE_BLOCK_TRANSFORM
+        #ifdef OPTIMIZE_BLOCK_TRANSFORM_DUP
             NSMutableSet *blockSet = [NSMutableSet set];
-#endif
+        #endif
             for (int r=0; r<8; r++) {
                 if (r == 4) {
+                #ifdef OPTIMIZE_SQUARE_ROTATE
+                    [block reverseBlockInplace];
+                #else
                     block = [block reverseBlock];
+                #endif
                 }
                 
                 if (r != 0) {
-                    
-#ifdef OPTIMIZE_MSGSEND
-                    block = ((id (*)(id obj, SEL sel, ...))block->rotateSquareIMP)(block, block->rotateSquareSEL);
-#else
+                #ifdef OPTIMIZE_SQUARE_ROTATE
+                    [block rotateClockwiseInplace];
+                #else
                     block = [block rotateClockwise];
-#endif
-                    
+                #endif
                 }
-#ifdef OPTIMIZE_BLOCK_TRANSFORM
+                
+            #ifdef OPTIMIZE_BLOCK_TRANSFORM_DUP
                 if ([blockSet containsObject:block]) {
                     continue;
                 } else {
                     [blockSet addObject:block];
                 }
-#endif
+            #endif
 
                 
 #ifdef OPTIMIZE_MSGSEND
@@ -463,7 +512,7 @@ static NSInteger rotateSquareCounter = 0;
         }
     }
     
-    [blocks insertObject:origBlock atIndex:0];
+    [blocks insertObject:block atIndex:0];
     
 //OUT_HERE:
 //    if (!arrange) {
@@ -486,9 +535,18 @@ static NSInteger rotateSquareCounter = 0;
     }
     
     BOOL arrange = YES;
+    
+#ifdef OPTIMIZE_SQUARE_ROTATE
+    NSInteger startY = block.startY;
+    NSInteger startX = block.startX;
+#else
+    NSInteger startY = 0;
+    NSInteger startX = 0;
+#endif
+    
     for (int i=0; i<blockHeight; i++) {
         for (int j=0; j<blockWidth; j++) {
-            if (block.unitArr[i][j].unitState == SquareUnitStateFull) {
+            if (block.unitArr[i+startY][j+startX].unitState == SquareUnitStateFull) {
                 if (self.unitArr[i+y][j+x].unitState == SquareUnitStateEmpty) {
                     self.unitArr[i+y][j+x].unitState = SquareUnitStateFull;
                     self.unitArr[i+y][j+x].blockID = block.blockID;
@@ -556,7 +614,6 @@ OUT_HERE:
 #else
                 [self DFSConnectedAreaCountStartFromX:i Y:j count:&connectedAreaCount];
 #endif
-                
                 
                 minCount = MIN(minCount, connectedAreaCount);
                 if (minCount < limit) {
