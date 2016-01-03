@@ -16,30 +16,38 @@ typedef NS_ENUM(NSInteger, SquareUnitState) {
     SquareUnitStateVisited = -1,
 };
 
-@interface SquareUnit : NSObject <NSCopying>
+typedef struct {
+    int x;
+    int y;
+} SPPoint;
+
+@interface SquareUnit : NSObject {
+    SquareUnitState _unitState;
+}
+
 @property (nonatomic) SquareUnitState unitState;
-@property (nonatomic, strong) NSString *blockID;
+@property (nonatomic) NSInteger blockID;
 @property (nonatomic, strong) UIColor *blockColor;
 - (void)reset;
 @end
 
 @protocol SquareMatrixProtocol <NSObject>
-- (NSInteger)width;
-- (NSInteger)height;
+- (int)width;
+- (int)height;
 - (NSArray <NSArray <SquareUnit *> *> *)unitArr;
 - (void)printSquare;
 @end
 
 @interface NSMutableArray (SquarePuzzle)
-+ (NSMutableArray <NSMutableArray <SquareUnit *> *> *)squareArrayWithWidth:(NSInteger)width height:(NSInteger)height;
++ (NSMutableArray <NSMutableArray <SquareUnit *> *> *)squareArrayWithWidth:(int)width height:(int)height;
 @end
 
 @interface SquareBlock : NSObject <SquareMatrixProtocol>
 
-@property (nonatomic, strong) NSString *blockID;
+@property (nonatomic) NSInteger blockID;
 @property (nonatomic, strong) UIColor *blockColor;
 
-- (instancetype)initWithSquarShapeArr:(NSArray <NSArray <SquareUnit *> *> *)shapeArr width:(NSInteger)width height:(NSInteger)height;
+- (instancetype)initWithSquarShapeArr:(NSArray <NSArray <SquareUnit *> *> *)shapeArr width:(int)width height:(int)height;
 - (SquareBlock *)rotateClockwise;
 - (void)rotateClockwiseInplace;
 
@@ -50,9 +58,9 @@ typedef NS_ENUM(NSInteger, SquareUnitState) {
 
 @interface SquarePuzzleSolver : NSObject <SquareMatrixProtocol>
 
-- (instancetype)initWithBorderWidth:(NSInteger)width height:(NSInteger)height minBlockUnitCount:(NSInteger)minUnitCount;
+- (instancetype)initWithBorderWidth:(int)width height:(int)height minBlockUnitCount:(int)minUnitCount;
 - (void)addSquareUnit:(SquareBlock *)block;
-- (BOOL)arrangeBlock:(SquareBlock *)block atX:(NSInteger)x Y:(NSInteger)y;
+- (BOOL)arrangeBlock:(SquareBlock *)block atX:(int)x Y:(int)y;
 - (void)arrangeBlocks:(NSMutableArray <SquareBlock *> *)blocks;
 - (void)solvePuzzle;
 - (void)printAllSolutions;

@@ -30,38 +30,85 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 
 @implementation ViewController
 
-- (void)_internalCall{
+- (void)_functionCall{
     // Do nothing...
 }
 
-- (void) testObjectiveCMethod {
+- (void)testObjectiveCMethod {
     START
-    
     for (NSUInteger i = 0; i < LOOP; ++i) {
-        [self _internalCall];
-    }  
-    
+        [self _functionCall];
+    }
     END  
 }
 
-- (void) testCCall {
-    
-    SEL sel = @selector(_internalCall);
-//    Func call = [self methodForSelector:@selector(_internalCall)];
-    IMP imp = [self methodForSelector:@selector(_internalCall)];
-    
-    
+- (void)testCCall {
+    SEL sel = @selector(_functionCall);
+    IMP imp = [self methodForSelector:@selector(_functionCall)];
     START
-    
     for (NSUInteger i = 0; i < LOOP; ++i) {
-//        (Func)(call)(self, sel);
-//        (*call)(self, sel);
         ((void (*)(id sender, SEL sel, ...))imp)(self, sel);
-//        (void (*)(id sender, SEL sel))(*call)(self, sel);
-//        (void(*)(id, SEL)(call))(self, sel);
+    }
+    END  
+}
+
+- (void)testArrayCountTime
+{
+    NSInteger matrixN = 100000;
+    NSMutableArray <NSMutableArray <NSNumber *> *> *squareArr = [NSMutableArray arrayWithCapacity:matrixN];
+    for (int i=0; i<matrixN; i++) {
+        NSMutableArray <NSNumber *> *rowArr = [NSMutableArray arrayWithCapacity:matrixN];
+        for (int j=0; j<matrixN; j++) {
+            [rowArr addObject:@1];
+        }
+        
+        [squareArr addObject:rowArr];
     }
     
-    END  
+    START
+    NSInteger testLoopCount = 100;
+    for (int k=0; k<testLoopCount; k++) {
+        for (int i=0; i<matrixN; i++) {
+            for (int j=0; j<matrixN; j++) {
+                NSUInteger l1 = squareArr.count;
+                NSUInteger l2 = squareArr[0].count;
+            }
+        }
+    }
+    END
+    
+    START
+    NSInteger testLoopCount = 100;
+    for (int k=0; k<testLoopCount; k++) {
+        for (int i=0; i<matrixN; i++) {
+            for (int j=0; j<matrixN; j++) {
+                NSNumber *x = squareArr[i][j];
+                x = @2;
+            }
+        }
+    }
+    END
+}
+
+- (void)testMatrixVisitARC
+{
+    START
+    int n = 10;
+    int loop = 100000;
+    SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:n height:n minBlockUnitCount:5];
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = solver.unitArr;
+    
+    
+    for (int l=0; l<loop; l++) {
+        for (int i=0; i<solver.height; i++) {
+            for (int j=0; j<solver.width; j++) {
+                solver.unitArr[i][j].unitState = SquareUnitStateVisited;
+//                squareBoardArr[i][j].unitState = SquareUnitStateVisited;
+            }
+        }
+    }
+    
+    END
 }
 
 - (void)viewDidLoad {
@@ -70,30 +117,12 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 //    [self testObjectiveCMethod];
 //    [self testCCall];
 //    return;
+//    [self testArrayCountTime];
+//    return;
     
-    
-    NSMutableArray <NSMutableArray <SquareUnit *> *> *shapeArr = [NSMutableArray squareArrayWithWidth:4 height:4];
-    shapeArr[0][0].unitState = 1;
-    shapeArr[1][0].unitState = 1;
-    shapeArr[2][0].unitState = 1;
-    shapeArr[3][0].unitState = 1;
-    shapeArr[3][1].unitState = 1;
-//    shapeArr[2][1].unitState = 1;
-//    shapeArr[2][1].unitState = 1;
-//    shapeArr[2][2].unitState = 1;
-    SquareBlock *block = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
-    block.blockID = @"1";
+//    [self testMatrixVisitARC];
+//    return;
 
-    NSMutableSet *set = [NSMutableSet set];
-    [set addObject:block];
-    
-    [block rotateClockwiseInplace];
-    [set addObject:block];
-    
-//    [block rotateClockwiseInplace];
-    [block reverseBlockInplace];
-    
-    SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:2 height:2 minBlockUnitCount:5];
     
     [self _initAllBlocks];
     
@@ -146,7 +175,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
         SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:3 height:5 minBlockUnitCount:5];
         [solver addSquareUnit:self.allBlocks[1]];
         [solver addSquareUnit:self.allBlocks[5]];
-        [solver addSquareUnit:self.allBlocks[10]];
+        [solver addSquareUnit:self.allBlocks[9]];
         
         NSTimeInterval begin, end, time;
         begin = CACurrentMediaTime();
@@ -195,21 +224,15 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:4 height:5 minBlockUnitCount:5];
         
-        
         SquareBlock *blcok2 = self.allBlocks[1];
         SquareBlock *blcok6 = self.allBlocks[5];
-        SquareBlock *blcok11 = self.allBlocks[10];
-        SquareBlock *blcok13 = self.allBlocks[12];
-        
-//        [solver addSquareUnit:blcok2];
-//        [solver addSquareUnit:blcok6];
-//        [solver addSquareUnit:blcok11];
-//        [solver addSquareUnit:blcok13];
+        SquareBlock *blcok10 = self.allBlocks[9];
+        SquareBlock *blcok12 = self.allBlocks[11];
         
         [solver addSquareUnit:blcok2];
         [solver addSquareUnit:blcok6];
-        [solver addSquareUnit:blcok11];
-        [solver addSquareUnit:blcok13];
+        [solver addSquareUnit:blcok10];
+        [solver addSquareUnit:blcok12];
         
         NSTimeInterval begin, end, time;
         begin = CACurrentMediaTime();
@@ -260,16 +283,16 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
         SquareBlock *block2 = self.allBlocks[1];
         SquareBlock *block4 = self.allBlocks[3];
         SquareBlock *block6 = self.allBlocks[5];
+        SquareBlock *block10 = self.allBlocks[9];
         SquareBlock *block11 = self.allBlocks[10];
         SquareBlock *block12 = self.allBlocks[11];
-        SquareBlock *block13 = self.allBlocks[12];
         
         [solver addSquareUnit:block2];
         [solver addSquareUnit:block4];
         [solver addSquareUnit:block6];
+        [solver addSquareUnit:block10];
         [solver addSquareUnit:block11];
         [solver addSquareUnit:block12];
-        [solver addSquareUnit:block13];
         
         NSTimeInterval begin, end, time;
         begin = CACurrentMediaTime();
@@ -316,7 +339,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:13 height:5 minBlockUnitCount:5];
+        SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:12 height:5 minBlockUnitCount:5];
         
         [self.allBlocks enumerateObjectsUsingBlock:^(SquareBlock * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [solver addSquareUnit:obj];
@@ -370,9 +393,8 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[0][3].unitState = SquareUnitStateFull;
     shapeArr[0][4].unitState = SquareUnitStateFull;
     SquareBlock *block1 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:5 height:1];
-    block1.blockID = @"1";
+    block1.blockID = 1;
     block1.blockColor = [UIColor colorWithRed:225/255.f green:190/255.f blue:224/255.f alpha:1];
-    
     
     // block2
     shapeArr = [NSMutableArray squareArrayWithWidth:4 height:2];
@@ -382,7 +404,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][2].unitState = SquareUnitStateFull;
     shapeArr[1][3].unitState = SquareUnitStateFull;
     SquareBlock *block2 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
-    block2.blockID = @"2";
+    block2.blockID = 2;
     block2.blockColor = [UIColor colorWithRed:241/255.f green:58/255.f blue:1/255.f alpha:1];
     
     // block3
@@ -393,7 +415,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][0].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
     SquareBlock *block3 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:2];
-    block3.blockID = @"3";
+    block3.blockID = 3;
     block3.blockColor = [UIColor colorWithRed:254/255.f green:227/255.f blue:34/255.f alpha:1];
     
     // block4
@@ -404,7 +426,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[2][0].unitState = SquareUnitStateFull;
     shapeArr[2][1].unitState = SquareUnitStateFull;
     SquareBlock *block4 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
-    block4.blockID = @"4";
+    block4.blockID = 4;
     block4.blockColor = [UIColor colorWithRed:173/255.f green:38/255.f blue:94/255.f alpha:1];
     
     // block5
@@ -415,7 +437,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][0].unitState = SquareUnitStateFull;
     shapeArr[2][0].unitState = SquareUnitStateFull;
     SquareBlock *block5 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
-    block5.blockID = @"5";
+    block5.blockID = 5;
     block5.blockColor = [UIColor colorWithRed:4/255.f green:108/255.f blue:193/255.f alpha:1];
     
     // block6
@@ -426,92 +448,92 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[2][1].unitState = SquareUnitStateFull;
     SquareBlock *block6 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
-    block6.blockID = @"6";
+    block6.blockID = 6;
     block6.blockColor = [UIColor colorWithRed:41/255.f green:158/255.f blue:70/255.f alpha:1];
     //    [block6 printSquare];
     
     // block7
-    shapeArr = [NSMutableArray squareArrayWithWidth:1 height:5];
-    shapeArr[0][0].unitState = SquareUnitStateFull;
-    shapeArr[1][0].unitState = SquareUnitStateFull;
-    shapeArr[2][0].unitState = SquareUnitStateFull;
-    shapeArr[3][0].unitState = SquareUnitStateFull;
-    shapeArr[4][0].unitState = SquareUnitStateFull;
-    SquareBlock *block7 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:1 height:5];
-    block7.blockID = @"7";
-    block7.blockColor = [UIColor colorWithRed:197/255.f green:186/255.f blue:182/255.f alpha:1];
+//    shapeArr = [NSMutableArray squareArrayWithWidth:1 height:5];
+//    shapeArr[0][0].unitState = SquareUnitStateFull;
+//    shapeArr[1][0].unitState = SquareUnitStateFull;
+//    shapeArr[2][0].unitState = SquareUnitStateFull;
+//    shapeArr[3][0].unitState = SquareUnitStateFull;
+//    shapeArr[4][0].unitState = SquareUnitStateFull;
+//    SquareBlock *block7 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:1 height:5];
+//    block7.blockID = @"7";
+//    block7.blockColor = [UIColor colorWithRed:197/255.f green:186/255.f blue:182/255.f alpha:1];
     //    [block7 printSquare];
     
-    // block8
+    // block7
     shapeArr = [NSMutableArray squareArrayWithWidth:3 height:3];
     shapeArr[0][0].unitState = SquareUnitStateFull;
     shapeArr[0][1].unitState = SquareUnitStateFull;
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
     shapeArr[2][1].unitState = SquareUnitStateFull;
-    SquareBlock *block8 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
-    block8.blockID = @"8";
-    block8.blockColor = [UIColor colorWithRed:253/255.f green:231/255.f blue:57/255.f alpha:1];
+    SquareBlock *block7 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
+    block7.blockID = 7;
+    block7.blockColor = [UIColor colorWithRed:253/255.f green:231/255.f blue:57/255.f alpha:1];
     //    [block8 printSquare];
     
-    // block9
+    // block8
     shapeArr = [NSMutableArray squareArrayWithWidth:4 height:2];
     shapeArr[0][0].unitState = SquareUnitStateFull;
     shapeArr[0][1].unitState = SquareUnitStateFull;
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
     shapeArr[1][3].unitState = SquareUnitStateFull;
-    SquareBlock *block9 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
-    block9.blockID = @"9";
-    block9.blockColor = [UIColor colorWithRed:15/255.f green:11/255.f blue:12/255.f alpha:1];
+    SquareBlock *block8 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
+    block8.blockID = 8;
+    block8.blockColor = [UIColor colorWithRed:15/255.f green:11/255.f blue:12/255.f alpha:1];
     //    [block9 printSquare];
     
-    // block10
+    // block9
     shapeArr = [NSMutableArray squareArrayWithWidth:3 height:3];
     shapeArr[0][1].unitState = SquareUnitStateFull;
     shapeArr[1][0].unitState = SquareUnitStateFull;
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
     shapeArr[2][1].unitState = SquareUnitStateFull;
-    SquareBlock *block10 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
-    block10.blockID = @"10";
-    block10.blockColor = [UIColor colorWithRed:227/255.f green:3/255.f blue:3/255.f alpha:1];
+    SquareBlock *block9 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
+    block9.blockID = 9;
+    block9.blockColor = [UIColor colorWithRed:227/255.f green:3/255.f blue:3/255.f alpha:1];
     //    [block10 printSquare];
     
-    // block11
+    // block10
     shapeArr = [NSMutableArray squareArrayWithWidth:4 height:2];
     shapeArr[0][0].unitState = SquareUnitStateFull;
     shapeArr[0][1].unitState = SquareUnitStateFull;
     shapeArr[0][2].unitState = SquareUnitStateFull;
     shapeArr[0][3].unitState = SquareUnitStateFull;
     shapeArr[1][2].unitState = SquareUnitStateFull;
-    SquareBlock *block11 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
-    block11.blockID = @"11";
-    block11.blockColor = [UIColor colorWithRed:91/255.f green:39/255.f blue:17/255.f alpha:1];
+    SquareBlock *block10 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
+    block10.blockID = 10;
+    block10.blockColor = [UIColor colorWithRed:91/255.f green:39/255.f blue:17/255.f alpha:1];
     //    [block11 printSquare];
     
-    // block12
+    // block11
     shapeArr = [NSMutableArray squareArrayWithWidth:3 height:3];
     shapeArr[0][0].unitState = SquareUnitStateFull;
     shapeArr[0][1].unitState = SquareUnitStateFull;
     shapeArr[1][1].unitState = SquareUnitStateFull;
     shapeArr[2][1].unitState = SquareUnitStateFull;
     shapeArr[2][2].unitState = SquareUnitStateFull;
-    SquareBlock *block12 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
-    block12.blockID = @"12";
-    block12.blockColor = [UIColor colorWithRed:183/255.f green:183/255.f blue:182/255.f alpha:1];
+    SquareBlock *block11 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:3];
+    block11.blockID = 11;
+    block11.blockColor = [UIColor colorWithRed:183/255.f green:183/255.f blue:182/255.f alpha:1];
     //    [block12 printSquare];
     
-    // block13
+    // block12
     shapeArr = [NSMutableArray squareArrayWithWidth:3 height:2];
     shapeArr[0][0].unitState = SquareUnitStateFull;
     shapeArr[0][1].unitState = SquareUnitStateFull;
     shapeArr[0][2].unitState = SquareUnitStateFull;
     shapeArr[1][0].unitState = SquareUnitStateFull;
     shapeArr[1][1].unitState = SquareUnitStateFull;
-    SquareBlock *block13 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:2];
-    block13.blockID = @"13";
-    block13.blockColor = [UIColor colorWithRed:104/255.f green:186/255.f blue:226/255.f alpha:1];
+    SquareBlock *block12 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:2];
+    block12.blockID = 12;
+    block12.blockColor = [UIColor colorWithRed:104/255.f green:186/255.f blue:226/255.f alpha:1];
     
     [self.allBlocks addObject:block1];
     [self.allBlocks addObject:block2];
@@ -525,7 +547,6 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     [self.allBlocks addObject:block10];
     [self.allBlocks addObject:block11];
     [self.allBlocks addObject:block12];
-    [self.allBlocks addObject:block13];
 }
 
 - (void)didReceiveMemoryWarning {

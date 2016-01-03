@@ -1,4 +1,4 @@
-//
+
 //  SquarePuzzleSolver.m
 //  SquarePuzzle
 //
@@ -11,13 +11,32 @@
 printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000);}
 
 
+//#define FIND_ALL_SOLUTIONS
+
+
+// 放置之后DFS检查最小连通空间
+#define OPTIMIZE_ARRANGE_CONNECTED_DFS
+// block变形去重
 #define OPTIMIZE_BLOCK_TRANSFORM_DUP
-#define OPTIMIZE_MSGSEND
+// self.width, self.height 变量存储
 #define OPTIMIZE_WIDTH_HEIGHT_GETTER
-//#define OPTIMIZE_SQUARE_ROTATE
+// 矩阵旋转的原地算法优化
+#define OPTIMIZE_SQUARE_ROTATE
+// objc call 优化为 纯C call
+#define OPTIMIZE_MSGSEND
+// remove block 搜索空间优化
+#define OPTIMIZE_BLOCK_REMOVE
+// arrange起始点优化（结束点）
+#define OPTIMIZE_ARRANGE_SEARCH_RANGE
+// DFS搜索空间的优化（只搜索block周围及内部空白点）
+#define OPTIMIZE_DFS_SEARCH_POINT
+// 遍历数组时候的ARC优化
+#define OPTIMEZE_ENUMETATE_ARC
 
 #import "SquarePuzzleSolver.h"
 #import <objc/runtime.h>
+
+static const int kMaxBoardWidth = 15;
 
 static NSInteger arrangeBlksCounter = 0;
 static NSInteger arrangeXYCounter = 0;
@@ -25,22 +44,50 @@ static NSInteger dfsMinAreaBlkCounter = 0;
 static NSInteger dfsMinAreaXYCounter = 0;
 static NSInteger rotateSquareCounter = 0;
 
+static NSInteger hashCounter = 0;
+static NSInteger equalCounter = 0;
+
+static inline void swap(int *a, int *b) {
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+static inline int minInRange(int *arr, int start, int len) {
+    int min = INT_MAX;
+    for (int i=start; i<start+len; i++) {
+        min = MIN(min, arr[i]);
+    }
+    
+    return min;
+}
+
+static inline int maxInRange(int *arr, int start, int len) {
+    int max = INT_MIN;
+    for (int i=start; i<start+len; i++) {
+        max = MAX(max, arr[i]);
+    }
+    
+    return max;
+}
+
 @implementation SquareUnit
+
+- (SquareUnitState)unitState
+{
+    return _unitState;
+}
+
+- (void)setUnitState:(SquareUnitState)unitState
+{
+    _unitState = unitState;
+}
 
 - (void)reset
 {
     self.unitState = SquareUnitStateEmpty;
-    self.blockID = nil;
+    self.blockID = 0;
     self.blockColor = nil;
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    SquareUnit *copy = [[[self class] allocWithZone:zone] init];
-    copy.unitState = self.unitState;
-    copy.blockID = self.blockID;
-    copy.blockColor = self.blockColor;
-    return copy;
 }
 
 @end
@@ -48,7 +95,7 @@ static NSInteger rotateSquareCounter = 0;
 
 @implementation NSMutableArray (SquarePuzzle)
 
-+ (NSMutableArray <NSMutableArray <SquareUnit *> *> *)squareArrayWithWidth:(NSInteger)width height:(NSInteger)height
++ (NSMutableArray <NSMutableArray <SquareUnit *> *> *)squareArrayWithWidth:(int)width height:(int)height
 {
 #ifdef OPTIMIZE_SQUARE_ROTATE
     width = MAX(width, height);
@@ -72,70 +119,37 @@ static NSInteger rotateSquareCounter = 0;
 
 @interface SquareBlock ()
 {
-    NSInteger _width;
-    NSInteger _height;
+    int _width;
+    int _height;
 @public
     IMP rotateSquareIMP;
     SEL rotateSquareSEL;
 }
 
 @property (nonatomic, strong) NSArray <NSArray <SquareUnit *> *> *shapeArr;
-@property (nonatomic) NSInteger startX;
-@property (nonatomic) NSInteger startY;
+@property (nonatomic) SPPoint startPoint;
+@property (nonatomic) SPPoint arrangePoint;
 
 @end
 
 
 @implementation SquareBlock
 
-//- (id)copyWithZone:(NSZone *)zone
-//{
-//    SquareBlock *copy = [[[self class] allocWithZone:zone] initWithSquarShapeArr:[NSMutableArray squareArrayWithWidth:self.width height:self.height]];
-//    copy.blockID = self.blockID;
-//    copy.blockColor = self.blockColor;
-//    for (int i=0; i<self.height; i++) {
-//        for (int j=0; j<self.width; j++) {
-//            copy.unitArr[i][j].unitState = self.unitArr[i][j].unitState;
-//            copy.unitArr[i][j].blockID = self.unitArr[i][j].blockID;
-//            copy.unitArr[i][j].blockColor = self.unitArr[i][j].blockColor;
-//        }
-//    }
-//
-//    return copy;
-//}
-
-- (BOOL)isEqual:(id)object
+- (NSInteger)block2HashCode
 {
-#ifdef OPTIMIZE_SQUARE_ROTATE
-    return [super isEqual:object];
+#ifdef OPTIMEZE_ENUMETATE_ARC
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
 #else
-    SquareBlock *other = (SquareBlock *)object;
-    if (self.width == other.width && self.height == other.height) {
-        for (int i=0; i<self.height; i++) {
-            for (int j=0; j<self.width; j++) {
-                if (self.unitArr[i][j].unitState != other.unitArr[i][j].unitState) {
-                    return NO;
-                }
-            }
-        }
-    } else {
-        return NO;
-    }
-    
-    return YES;
+    NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
 #endif
-}
-
-- (NSUInteger)hash
-{
-#ifdef OPTIMIZE_SQUARE_ROTATE
+    
     NSInteger signature = 0;
     int n = (int)MAX(self.width, self.height);
-    for (int i=(int)self.startY; i<self.startY+n; i++) {
-        for (int j=(int)self.startX; j<self.startX+n; j++) {
-            NSInteger x = 0;
-            if (i < self.startY+self.height && j < self.startX+self.width) {
-                x = ((self.unitArr[i][j].unitState == SquareUnitStateFull) ? 1 : 0);
+    for (int i=(int)self.startPoint.y; i<self.startPoint.y+n; i++) {
+        for (int j=(int)self.startPoint.x; j<self.startPoint.x+n; j++) {
+            int x = 0;
+            if (i < self.startPoint.y+self.height && j < self.startPoint.x+self.width) {
+                x = ((squareBoardArr[i][j].unitState == SquareUnitStateFull) ? 1 : 0);
             }
             
             signature = (signature << 1) + x;
@@ -143,12 +157,9 @@ static NSInteger rotateSquareCounter = 0;
     }
     
     return signature;
-#else
-    return [self.blockID integerValue];
-#endif
 }
 
-- (NSInteger)width
+- (int)width
 {
 #ifdef OPTIMIZE_WIDTH_HEIGHT_GETTER
     return _width;
@@ -157,7 +168,7 @@ static NSInteger rotateSquareCounter = 0;
 #endif
 }
 
-- (NSInteger)height
+- (int)height
 {
 #ifdef OPTIMIZE_WIDTH_HEIGHT_GETTER
     return _height;
@@ -166,7 +177,7 @@ static NSInteger rotateSquareCounter = 0;
 #endif
 }
 
-- (instancetype)initWithSquarShapeArr:(NSArray <NSArray <SquareUnit *> *> *)shapeArr width:(NSInteger)width height:(NSInteger)height
+- (instancetype)initWithSquarShapeArr:(NSArray <NSArray <SquareUnit *> *> *)shapeArr width:(int)width height:(int)height
 {
     if (self = [super init]) {
         _shapeArr = shapeArr;
@@ -181,8 +192,8 @@ static NSInteger rotateSquareCounter = 0;
         _width = shapeArr[0].count;
 #endif
         
-        _startX = 0;
-        _startY = 0;
+        _startPoint.x = 0;
+        _startPoint.y = 0;
     }
     
     return self;
@@ -193,35 +204,15 @@ static NSInteger rotateSquareCounter = 0;
     return self.shapeArr;
 }
 
-//- (NSString *)blockSignature
-//{
-//    NSMutableString *solStr = [NSMutableString string];
-//    for (int i=(int)self.startY; i<self.height; i++) {
-//        for (int j=(int)self.startX; j<self.width; j++) {
-//            if (self.unitArr[i][j].unitState == SquareUnitStateFull) {
-//                [solStr appendString:self.blockID];
-//            } else {
-//                [solStr appendString:@"0"];
-//            }
-//            
-//            if (!(i == self.height-1 && j == self.width-1)) {
-//                [solStr appendString:@","];
-//            }
-//        }
-//    }
-//    
-//    return [NSString stringWithString:solStr];
-//}
-
 - (void)printSquare
 {
     int n = (int)MAX(self.width, self.height);
     for (int i=0; i<n; i++) {
         for (int j=0; j<n; j++) {
             if (self.unitArr[i][j].unitState == SquareUnitStateFull) {
-                printf("%ld    ", [self.blockID integerValue]);
+                printf("%ld    ", self.blockID);
             } else {
-                printf("%ld    ", 0);
+                printf("%d    ", 0);
             }
 //            printf("%ld    ", self.unitArr[i][j].unitState);
         }
@@ -229,7 +220,7 @@ static NSInteger rotateSquareCounter = 0;
         printf("\n");
     }
     
-    printf("%d\t%d", _startY, _startX);
+    printf("%d\t%d", _startPoint.y, _startPoint.x);
     
     printf("\n");
 }
@@ -252,37 +243,45 @@ static NSInteger rotateSquareCounter = 0;
 
 - (void)rotateClockwiseInplace
 {
-    _startX = _startY = INT_MAX;
-    int n = (int)self.width;
+#ifdef OPTIMEZE_ENUMETATE_ARC
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *blockArr = self.unitArr;
+#else
+    NSArray <NSArray <SquareUnit *> *> *blockArr = self.unitArr;
+#endif
+    
+    _startPoint.x = _startPoint.y = INT_MAX;
+    int n = (int)MAX(self.width, self.height);
+    swap(&_width, &_height);
+    
     for (int i=0; i<n/2; i++) {
         for (int j=i; j<n-i-1; j++) {
-            SquareUnitState first = self.unitArr[i][j].unitState;
+            SquareUnitState first = blockArr[i][j].unitState;
             int cur_i = i, cur_j = j;
             int next_i = n-cur_j-1, next_j = i;
             while (!(next_i == i && next_j == j)) {
-                SquareUnitState nextState = self.unitArr[next_i][next_j].unitState;
-                self.unitArr[cur_i][cur_j].unitState = nextState;
+                SquareUnitState nextState = blockArr[next_i][next_j].unitState;
+                blockArr[cur_i][cur_j].unitState = nextState;
                 if (nextState == SquareUnitStateFull) {
-                    _startY = MIN(_startY, cur_i);
-                    _startX = MIN(_startX, cur_j);
+                    _startPoint.y = MIN(_startPoint.y, cur_i);
+                    _startPoint.x = MIN(_startPoint.x, cur_j);
                 }
                 
                 cur_i = next_i, cur_j = next_j;
                 next_i = n-cur_j-1, next_j = cur_i;
             }
             
-            self.unitArr[cur_i][cur_j].unitState = first;
+            blockArr[cur_i][cur_j].unitState = first;
             if (first != SquareUnitStateEmpty) {
-                _startY = MIN(_startY, cur_i);
-                _startX = MIN(_startX, cur_j);
+                _startPoint.y = MIN(_startPoint.y, cur_i);
+                _startPoint.x = MIN(_startPoint.x, cur_j);
             }
         }
     }
     
     if (n % 2) {
-        if (self.unitArr[n/2][n/2] != SquareUnitStateEmpty) {
-            _startY = MIN(_startY, n/2);
-            _startX = MIN(_startX, n/2);
+        if (blockArr[n/2][n/2] != SquareUnitStateEmpty) {
+            _startPoint.y = MIN(_startPoint.y, n/2);
+            _startPoint.x = MIN(_startPoint.x, n/2);
         }
     }
 }
@@ -304,21 +303,28 @@ static NSInteger rotateSquareCounter = 0;
 
 - (void)reverseBlockInplace
 {
-    _startX = _startY = INT_MAX;
-    for (int i=0; i<self.height; i++) {
-        for (int j=0; j<self.width/2; j++) {
-            SquareUnitState stateA = self.unitArr[i][j].unitState;
-            SquareUnitState stateB = self.unitArr[i][self.width-j-1].unitState;
-            self.unitArr[i][j].unitState = stateB;
-            self.unitArr[i][self.width-j-1].unitState = stateA;
+#ifdef OPTIMEZE_ENUMETATE_ARC
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *blockArr = self.unitArr;
+#else
+    NSArray <NSArray <SquareUnit *> *> *blockArr = self.unitArr;
+#endif
+    
+    _startPoint.x = _startPoint.y = INT_MAX;
+    int n = (int)MAX(self.width, self.height);
+    for (int i=0; i<n; i++) {
+        for (int j=0; j<n/2; j++) {
+            SquareUnitState stateA = blockArr[i][j].unitState;
+            SquareUnitState stateB = blockArr[i][n-j-1].unitState;
+            blockArr[i][j].unitState = stateB;
+            blockArr[i][n-j-1].unitState = stateA;
             if (stateA == SquareUnitStateFull) {
-                _startY = MIN(_startY, i);
-                _startX = MIN(_startX, self.width-j-1);
+                _startPoint.y = MIN(_startPoint.y, i);
+                _startPoint.x = MIN(_startPoint.x, n-j-1);
             }
             
             if (stateB == SquareUnitStateFull) {
-                _startY = MIN(_startY, i);
-                _startX = MIN(_startX, j);
+                _startPoint.y = MIN(_startPoint.y, i);
+                _startPoint.x = MIN(_startPoint.x, j);
             }
         }
     }
@@ -338,24 +344,32 @@ static NSInteger rotateSquareCounter = 0;
     IMP dfsMinAreaXYIMP;
     SEL dfsMinAreaXYSEL;
     
-    NSInteger _width;
-    NSInteger _height;
+    int _width;
+    int _height;
+    
+    int _minValidXTable[kMaxBoardWidth];
+    int _maxValidXTable[kMaxBoardWidth];
 }
 
 @property (nonatomic, strong) NSArray <NSArray <SquareUnit *> *> *squareBoardArr;
 @property (nonatomic, strong) NSMutableArray <SquareBlock *> *allBlocks;
 @property (nonatomic, strong) NSMutableSet <NSString *> *solutions;
-@property (nonatomic) NSInteger minUnitCount;
+@property (nonatomic) int minUnitCount;
 @end
 
 
 @implementation SquarePuzzleSolver
 
-- (instancetype)initWithBorderWidth:(NSInteger)width height:(NSInteger)height minBlockUnitCount:(NSInteger)minUnitCount
+- (instancetype)initWithBorderWidth:(int)width height:(int)height minBlockUnitCount:(int)minUnitCount
 {
     if (self = [super init]) {
         _width = width;
         _height = height;
+        memset(_minValidXTable, 0, sizeof(int)*kMaxBoardWidth);
+        for (int i=0; i<kMaxBoardWidth; i++) {
+            _maxValidXTable[i]= (int)width-1;
+        }
+        
         NSMutableArray <NSMutableArray <SquareUnit *> *> *squareArr = [NSMutableArray arrayWithCapacity:height];
         for (int i=0; i<height; i++) {
             NSMutableArray <SquareUnit *>*rowArr = [NSMutableArray arrayWithCapacity:width];
@@ -383,7 +397,7 @@ static NSInteger rotateSquareCounter = 0;
     return self;
 }
 
-- (NSInteger)width
+- (int)width
 {
 #ifdef OPTIMIZE_WIDTH_HEIGHT_GETTER
     return _width;
@@ -392,7 +406,7 @@ static NSInteger rotateSquareCounter = 0;
 #endif
 }
 
-- (NSInteger)height
+- (int)height
 {
 #ifdef OPTIMIZE_WIDTH_HEIGHT_GETTER
     return _height;
@@ -411,7 +425,7 @@ static NSInteger rotateSquareCounter = 0;
     for (int i=0; i<self.height; i++) {
         for (int j=0; j<self.width; j++) {
             if (self.unitArr[i][j].unitState == SquareUnitStateFull) {
-                printf("%ld    ", [self.unitArr[i][j].blockID integerValue]);
+                printf("%ld    ", self.unitArr[i][j].blockID);
             } else {
                 printf("%d    ", 0);
             }
@@ -428,7 +442,7 @@ static NSInteger rotateSquareCounter = 0;
     NSMutableString *solStr = [NSMutableString string];
     for (int i=0; i<self.height; i++) {
         for (int j=0; j<self.width; j++) {
-            [solStr appendString:self.unitArr[i][j].blockID];
+            [solStr appendString:[NSString stringWithFormat:@"%ld", self.unitArr[i][j].blockID]];
             if (!(i == self.height-1 && j == self.width-1)) {
                 [solStr appendString:@","];
             }
@@ -449,51 +463,65 @@ static NSInteger rotateSquareCounter = 0;
     
     if (!blocks.count) {
         [self.solutions addObject:[self blockArrangement2String]];
+//        NSLog(@"find one solution!\n");
+//        [self printSquare];
         return;
     }
     
-    BOOL arrange = NO;
+//    BOOL arrange = NO;
     SquareBlock *block = blocks[0];
     [blocks removeObject:block];
     
-    for (int i=0; i<self.height; i++) {
-        for (int j=0; j<self.width; j++) {
-        #ifdef OPTIMIZE_BLOCK_TRANSFORM_DUP
-            NSMutableSet *blockSet = [NSMutableSet set];
-        #endif
-            for (int r=0; r<8; r++) {
-                if (r == 4) {
-                #ifdef OPTIMIZE_SQUARE_ROTATE
-                    [block reverseBlockInplace];
-                #else
-                    block = [block reverseBlock];
-                #endif
-                }
-                
-                if (r != 0) {
-                #ifdef OPTIMIZE_SQUARE_ROTATE
-                    [block rotateClockwiseInplace];
-                #else
-                    block = [block rotateClockwise];
-                #endif
-                }
-                
-            #ifdef OPTIMIZE_BLOCK_TRANSFORM_DUP
-                if ([blockSet containsObject:block]) {
-                    continue;
-                } else {
-                    [blockSet addObject:block];
-                }
-            #endif
-
-                
+#ifdef OPTIMIZE_BLOCK_TRANSFORM_DUP
+    NSMutableSet *blockSet = [NSMutableSet set];
+#endif
+    for (int r=0; r<8; r++) {
+        if (r == 4) {
+#ifdef OPTIMIZE_SQUARE_ROTATE
+            [block reverseBlockInplace];
+#else
+            block = [block reverseBlock];
+#endif
+        }
+        
+        if (r != 0) {
+#ifdef OPTIMIZE_SQUARE_ROTATE
+            [block rotateClockwiseInplace];
+#else
+            block = [block rotateClockwise];
+#endif
+        }
+      
+#ifdef OPTIMIZE_BLOCK_TRANSFORM_DUP
+        NSNumber *signature = [NSNumber numberWithInteger:[block block2HashCode]];
+        if ([blockSet containsObject:signature]) {
+            continue;
+        } else {
+            [blockSet addObject:signature];
+        }
+#endif
+        
+        int borderWidth = self.width;
+        int borderHeight = self.height;
+        int blockWidth = block.width;
+        int blockHeight = block.height;
+        
+//        for (int i=0; i<=borderHeight-blockHeight; i++) {
+        for (int i=0; i<=borderHeight-blockHeight; i++) {
+#ifdef OPTIMIZE_ARRANGE_SEARCH_RANGE
+            int j = minInRange(_minValidXTable, i, (int)blockHeight);
+            int jEnd = maxInRange(_maxValidXTable, i, (int)blockHeight)-(int)blockWidth+1;
+#else
+            int j = 0;
+            int jEnd = borderWidth-blockWidth;
+#endif
+            for (; j<=jEnd; j++) {
 #ifdef OPTIMIZE_MSGSEND
                 BOOL arrangeOne = ((BOOL (*)(id sender, SEL sel, ...))arrangeXYIMP)(self, arrangeXYSEL, block, j, i);
 #else
                 BOOL arrangeOne = [self arrangeBlock:block atX:j Y:i];
 #endif
-          
-
+                
                 if (arrangeOne) {
 #ifdef OPTIMIZE_MSGSEND
                     ((void (*)(id obj, SEL sel, ...))arrangeBlksIMP)(self, arrangeBlksSEL, self.allBlocks);
@@ -501,56 +529,67 @@ static NSInteger rotateSquareCounter = 0;
                     [self arrangeBlocks:self.allBlocks];
 #endif
                     
+#ifndef FIND_ALL_SOLUTIONS
+                    if (self.solutions.count > 0) {
+                        [blocks insertObject:block atIndex:0];
+                        return;
+                    }
+#endif
+                    
                     [self removeBlock:block];
-//                    if (arrangeRest) {
-                        // find one solution
-//                        arrange = YES;
-//                        goto OUT_HERE;
-//                    }
                 }
             }
         }
     }
-    
+
     [blocks insertObject:block atIndex:0];
-    
-//OUT_HERE:
-//    if (!arrange) {
-//        [blocks insertObject:[block rotateClockwise] atIndex:0];
-//    }
-//    
-//    return arrange;
 }
 
-- (BOOL)arrangeBlock:(SquareBlock *)block atX:(NSInteger)x Y:(NSInteger)y
+- (BOOL)arrangeBlock:(SquareBlock *)block atX:(int)x Y:(int)y
 {
     arrangeXYCounter++;
     
-    NSInteger borderWidth = self.width;
-    NSInteger borderHeight = self.height;
-    NSInteger blockWidth = block.width;
-    NSInteger blockHeight = block.height;
-    if (x+blockWidth > borderWidth || y+blockHeight>borderHeight) {
-        return NO;
-    }
+    int borderWidth = self.width;
+    int borderHeight = self.height;
+    int blockWidth = block.width;
+    int blockHeight = block.height;
     
     BOOL arrange = YES;
     
 #ifdef OPTIMIZE_SQUARE_ROTATE
-    NSInteger startY = block.startY;
-    NSInteger startX = block.startX;
+    int startY = block.startPoint.y;
+    int startX = block.startPoint.x;
 #else
-    NSInteger startY = 0;
-    NSInteger startX = 0;
+    int startY = 0;
+    int startX = 0;
 #endif
     
+#ifdef OPTIMEZE_ENUMETATE_ARC
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *blockArr = block.unitArr;
+#else
+    NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+    NSArray <NSArray <SquareUnit *> *> *blockArr = block.unitArr;
+#endif
+    
+    BOOL arrangeUnit = NO;
     for (int i=0; i<blockHeight; i++) {
         for (int j=0; j<blockWidth; j++) {
-            if (block.unitArr[i+startY][j+startX].unitState == SquareUnitStateFull) {
-                if (self.unitArr[i+y][j+x].unitState == SquareUnitStateEmpty) {
-                    self.unitArr[i+y][j+x].unitState = SquareUnitStateFull;
-                    self.unitArr[i+y][j+x].blockID = block.blockID;
-                    self.unitArr[i+y][j+x].blockColor = block.blockColor;
+            if (blockArr[i+startY][j+startX].unitState == SquareUnitStateFull) {
+                if (squareBoardArr[i+y][j+x].unitState == SquareUnitStateEmpty) {
+                    squareBoardArr[i+y][j+x].unitState = SquareUnitStateFull;
+                    squareBoardArr[i+y][j+x].blockID = block.blockID;
+                    squareBoardArr[i+y][j+x].blockColor = block.blockColor;
+                    
+                    if (_minValidXTable[i+y] == j+x) {
+                        _minValidXTable[i+y] = (int)(j+x+1);
+                    }
+                    
+                    if (_maxValidXTable[i+y] == j+x) {
+                        _maxValidXTable[i+y] = (int)(j+x-1);
+                    }
+                    
+                    arrangeUnit = YES;
                 } else {
                     arrange = NO;
                     goto OUT_HERE;
@@ -560,29 +599,47 @@ static NSInteger rotateSquareCounter = 0;
     }
     
 OUT_HERE:
-    if (arrange) {
-        // check min connected area
-#ifdef OPTIMIZE_MSGSEND
-        arrange = ((BOOL (*)(id obj, SEL sel, ...))dfsMinAreaBlkIMP)(self, dfsMinAreaBlkSEL, self.minUnitCount);
-#else
-        arrange = [self DFSMinConnectedCountLimit:self.minUnitCount];
+    {
+        SPPoint point = {(int)x, (int)y};
+        block.arrangePoint = point;
+        
+        if (arrange) {
+            
+#ifdef OPTIMIZE_ARRANGE_CONNECTED_DFS
+    #ifdef OPTIMIZE_DFS_SEARCH_POINT
+            arrange = [self DFSMinConnectedCountLimit:self.minUnitCount afterArrange:block];
+    #else
+            arrange = [self DFSMinConnectedCountLimit:self.minUnitCount];
+    #endif
+            [self clearVisitedFootprint];
 #endif
-        [self clearVisitedFootprint];
+            
+        }
+        
+        
+        if (!arrange && arrangeUnit) {
+            [self removeBlock:block];
+        } else {
+            
+        }
+
     }
-    
-    if (!arrange) {
-        [self removeBlock:block];
-    }
-    
+
     return arrange;
 }
 
 - (void)clearVisitedFootprint
 {
+#ifdef OPTIMEZE_ENUMETATE_ARC
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+#else
+    NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+#endif
+    
     for (int i=0; i<self.height; i++) {
         for (int j=0; j<self.width; j++) {
-            if (self.unitArr[i][j].unitState == SquareUnitStateVisited) {
-                self.unitArr[i][j].unitState = SquareUnitStateEmpty;
+            if (squareBoardArr[i][j].unitState == SquareUnitStateVisited) {
+                squareBoardArr[i][j].unitState = SquareUnitStateEmpty;
             }
         }
     }
@@ -590,33 +647,68 @@ OUT_HERE:
 
 - (void)removeBlock:(SquareBlock *)block
 {
-    // remove
-    for (int i=0; i<self.height; i++) {
-        for (int j=0; j<self.width; j++) {
-            if ([self.unitArr[i][j].blockID isEqualToString:block.blockID ]) {
-                [self.unitArr[i][j] reset];
+    // remove block
+    
+#ifdef OPTIMIZE_BLOCK_REMOVE
+    int startY = block.arrangePoint.y;
+    int startX = block.arrangePoint.x;
+    int width = (int)block.width;
+    int height = (int)block.height;
+#else
+    int startY = 0;
+    int startX = 0;
+    int width = self.width;
+    int height = self.height;
+#endif
+    
+#ifdef OPTIMEZE_ENUMETATE_ARC
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+#else
+    NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+#endif
+    
+    NSInteger blockID = block.blockID;
+    for (int i=startY; i<startY+height; i++) {
+        for (int j=startX; j<startX+width; j++) {
+            NSInteger tmpblockID = squareBoardArr[i][j].blockID;
+            if (tmpblockID == blockID) {
+                [squareBoardArr[i][j] reset];
+                
+#ifdef OPTIMIZE_ARRANGE_SEARCH_RANGE
+                if (_minValidXTable[i] > j) {
+                    _minValidXTable[i] = j;
+                }
+                
+                if (_maxValidXTable[i] < j) {
+                    _maxValidXTable[i] = j;
+                }
+#endif
             }
         }
     }
 }
 
-- (BOOL)DFSMinConnectedCountLimit:(NSInteger)limit
+- (BOOL)DFSMinConnectedCountLimit:(int)limit
 {
+    
+#ifdef OPTIMEZE_ENUMETATE_ARC
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+#else
+    NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+#endif
+    
     dfsMinAreaBlkCounter++;
-    NSInteger minCount = INT_MAX;
     for (int i=0; i<self.height; i++) {
         for (int j=(int)0; j<self.width; j++) {
-            if (self.unitArr[i][j].unitState == SquareUnitStateEmpty) {
-                NSInteger connectedAreaCount = 0;
+            if (squareBoardArr[i][j].unitState == SquareUnitStateEmpty) {
+                int connectedAreaCount = 0;
                 
 #ifdef OPTIMIZE_MSGSEND
                 ((void (*)(id obj, SEL sel, ...))dfsMinAreaXYIMP)(self, dfsMinAreaXYSEL, i, j, &connectedAreaCount);
 #else
                 [self DFSConnectedAreaCountStartFromX:i Y:j count:&connectedAreaCount];
 #endif
-                
-                minCount = MIN(minCount, connectedAreaCount);
-                if (minCount < limit) {
+                if (connectedAreaCount < limit) {
                     return NO;
                 }
             }
@@ -626,17 +718,58 @@ OUT_HERE:
     return YES;
 }
 
-- (void)DFSConnectedAreaCountStartFromX:(NSInteger)x Y:(NSInteger)y count:(NSInteger *)count
+- (BOOL)DFSMinConnectedCountLimit:(int)limit afterArrange:(SquareBlock *)block
 {
+#ifdef OPTIMEZE_ENUMETATE_ARC
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+#else
+    NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+#endif
+    
+    SPPoint point = block.arrangePoint;
+    int width = block.width;
+    int height = block.height;
+    
+    int startY = MAX(0, point.y-1), startX = MAX(0, point.x-1);
+    int endY = MIN(point.y+height+1, self.height), endX = MIN(point.x+width+1, self.width);
+    
+    for (int i=startY; i<endY; i++) {
+        for (int j=startX; j<endX; j++) {
+            if (squareBoardArr[i][j].unitState == SquareUnitStateEmpty) {
+                int connectedAreaCount = 0;
+#ifdef OPTIMIZE_MSGSEND
+                ((void (*)(id obj, SEL sel, ...))dfsMinAreaXYIMP)(self, dfsMinAreaXYSEL, i, j, &connectedAreaCount);
+#else
+                [self DFSConnectedAreaCountStartFromX:i Y:j count:&connectedAreaCount];
+#endif
+                if (connectedAreaCount < limit) {
+                    return NO;
+                }
+            }
+
+        }
+    }
+    
+    return YES;
+}
+
+- (void)DFSConnectedAreaCountStartFromX:(int)x Y:(int)y count:(int *)count
+{
+#ifdef OPTIMEZE_ENUMETATE_ARC
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+#else
+    NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+#endif
+    
     dfsMinAreaXYCounter++;
     
     if ((x < 0 || x >= self.height) || (y < 0 || y >= self.width)) {
         return;
     }
     
-    if (self.unitArr[x][y].unitState == SquareUnitStateEmpty) {
+    if (squareBoardArr[x][y].unitState == SquareUnitStateEmpty) {
         (*count)++;
-        self.unitArr[x][y].unitState = SquareUnitStateVisited;
+        squareBoardArr[x][y].unitState = SquareUnitStateVisited;
         
 #ifdef OPTIMIZE_MSGSEND
         ((void (*)(id obj, SEL sel, ...))dfsMinAreaXYIMP)(self, dfsMinAreaXYSEL, x+1, y, count);
@@ -660,6 +793,9 @@ OUT_HERE:
     dfsMinAreaXYCounter = 0;
     rotateSquareCounter = 0;
     
+    hashCounter = 0;
+    equalCounter = 0;
+    
 #ifdef OPTIMIZE_MSGSEND
     ((void (*)(id obj, SEL sel, ...))arrangeBlksIMP)(self, arrangeBlksSEL, self.allBlocks);
 #else
@@ -669,8 +805,11 @@ OUT_HERE:
     NSLog(@"arrangeBlksCounter : %ld", (long)arrangeBlksCounter);
     NSLog(@"arrangeXYCounter : %ld", (long)arrangeXYCounter);
     NSLog(@"dfsMinAreaBlkCounter : %ld", (long)dfsMinAreaBlkCounter);
-    NSLog(@"dfsMinAreaCounter : %ld", (long)dfsMinAreaXYCounter);
+    NSLog(@"dfsMinAreaXYCounter : %ld", (long)dfsMinAreaXYCounter);
     NSLog(@"rotateSquareCounter : %ld", (long)rotateSquareCounter);
+    
+    NSLog(@"hashCounter : %ld", (long)hashCounter);
+    NSLog(@"equalCounter : %ld", (long)equalCounter);
 }
 
 - (void)printAllSolutions
@@ -680,11 +819,11 @@ OUT_HERE:
     }];
 }
 
-- (SquareBlock *)searchBlockWithBlockID:(NSString *)blockID
+- (SquareBlock *)searchBlockWithBlockID:(NSInteger)blockID
 {
     __block SquareBlock *ret = nil;
     [self.allBlocks enumerateObjectsUsingBlock:^(SquareBlock * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj.blockID isEqualToString:blockID]) {
+        if (obj.blockID == blockID) {
             ret = obj;
             *stop = YES;
         }
@@ -712,10 +851,10 @@ OUT_HERE:
     
     [[solStr componentsSeparatedByString:@","] enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSString *blockID = obj;
-        SquareBlock *block = [self searchBlockWithBlockID:blockID];
+        SquareBlock *block = [self searchBlockWithBlockID:[blockID integerValue]];
         GridUnitView *grid = [[GridUnitView alloc] initWithColor:block.blockColor];
-        NSInteger row = idx / self.width;
-        NSInteger col = idx % self.width;
+        int row = (int)idx / self.width;
+        int col = (int)idx % self.width;
         grid.frame = CGRectMake(col*gridWidth, row*gridWidth, gridWidth, gridWidth);
         [borderView addSubview:grid];
     }];

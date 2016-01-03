@@ -116,14 +116,7 @@
 		3C1A73021C2CE682007568E6 /* SquarePuzzle */ = {
 			isa = PBXGroup;
 			children = (
-				BBBBEB051C2FB79D000A6F3A /* GridUnitView.h */,
-				BBBBEB061C2FB79D000A6F3A /* GridUnitView.m */,
-				BBBBEB0B1C2FD152000A6F3A /* MBProgressHUD.h */,
-				BBBBEB0C1C2FD152000A6F3A /* MBProgressHUD.m */,
-				BBBBEB0E1C2FD774000A6F3A /* UIView+Toast.h */,
-				BBBBEB0F1C2FD774000A6F3A /* UIView+Toast.m */,
-				BBBBEB081C2FBDCC000A6F3A /* XLCycleScrollView.h */,
-				BBBBEB091C2FBDCC000A6F3A /* XLCycleScrollView.m */,
+				BBACE5081C36C30F002747D0 /* TestCase */,
 				3C1A73361C2CF15A007568E6 /* SquarePuzzleSolver.h */,
 				3C1A73371C2CF15A007568E6 /* SquarePuzzleSolver.m */,
 				3C1A73061C2CE682007568E6 /* AppDelegate.h */,
@@ -134,6 +127,7 @@
 				3C1A730F1C2CE682007568E6 /* Assets.xcassets */,
 				3C1A73111C2CE682007568E6 /* LaunchScreen.storyboard */,
 				3C1A73141C2CE682007568E6 /* Info.plist */,
+				BBACE5071C36C2F5002747D0 /* Utils */,
 				3C1A73031C2CE682007568E6 /* Supporting Files */,
 			);
 			path = SquarePuzzle;
@@ -163,6 +157,28 @@
 				3C1A732A1C2CE682007568E6 /* Info.plist */,
 			);
 			path = SquarePuzzleUITests;
+			sourceTree = "<group>";
+		};
+		BBACE5071C36C2F5002747D0 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				BBBBEB051C2FB79D000A6F3A /* GridUnitView.h */,
+				BBBBEB061C2FB79D000A6F3A /* GridUnitView.m */,
+				BBBBEB0B1C2FD152000A6F3A /* MBProgressHUD.h */,
+				BBBBEB0C1C2FD152000A6F3A /* MBProgressHUD.m */,
+				BBBBEB0E1C2FD774000A6F3A /* UIView+Toast.h */,
+				BBBBEB0F1C2FD774000A6F3A /* UIView+Toast.m */,
+				BBBBEB081C2FBDCC000A6F3A /* XLCycleScrollView.h */,
+				BBBBEB091C2FBDCC000A6F3A /* XLCycleScrollView.m */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		BBACE5081C36C30F002747D0 /* TestCase */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = TestCase;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
