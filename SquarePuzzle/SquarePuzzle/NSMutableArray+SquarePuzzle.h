@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SquareBlock.h"
 
+@class SquareUnit;
 @interface NSMutableArray (SquarePuzzle)
-
++ (NSMutableArray <NSMutableArray <SquareUnit *> *> *)squareArrayWithWidth:(int)width height:(int)height;
 @end

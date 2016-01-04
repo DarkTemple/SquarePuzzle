@@ -8,9 +8,9 @@
 
 #import "ViewController.h"
 #import "SquarePuzzleSolver.h"
-#import "XLCycleScrollView.h"
 #import "MBProgressHUD.h"
 #import "UIView+Toast.h"
+#import "FreeStyleBoardView.h"
 
 typedef void (*Func)(id sender, SEL sel, ...);
 
@@ -21,11 +21,12 @@ static const NSTimeInterval kToastDuration = 1.f;
 #define END end = clock(); \
 printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 
-@interface ViewController () <XLCycleScrollViewDatasource, XLCycleScrollViewDelegate>
+@interface ViewController ()
 @property (nonatomic, strong) NSArray <UIView *> *allSolViews;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) NSMutableArray <SquareBlock *> *allBlocks;
 @property (nonatomic, strong) UISegmentedControl *segCtrl;
+@property (nonatomic, strong) FreeStyleBoardView *freeBoardView;
 @end
 
 @implementation ViewController
@@ -111,6 +112,11 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     END
 }
 
+- (void)tapBlock:(UITapGestureRecognizer *)tapGR
+{
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
@@ -123,43 +129,65 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 //    [self testMatrixVisitARC];
 //    return;
 
+//    return;
+    
     
     [self _initAllBlocks];
     
-    self.segCtrl = [[UISegmentedControl alloc] initWithItems:@[@"Case1", @"Case2", @"Case3", @"Case4"]];
+    self.segCtrl = [[UISegmentedControl alloc] initWithItems:@[@"FreeStyle", @"Case1", @"Case2", @"Case3", @"Case4"]];
     [self.segCtrl addTarget:self action:@selector(segSelected:) forControlEvents:UIControlEventValueChanged];
     self.segCtrl.frame = CGRectMake((CGRectGetWidth(self.view.frame)-CGRectGetWidth(self.segCtrl.frame))/2, 30, CGRectGetWidth(self.segCtrl.frame), CGRectGetHeight(self.segCtrl.frame));
     self.segCtrl.selectedSegmentIndex = 0;
-    [self.view addSubview:self.segCtrl];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
     self.scrollView.alwaysBounceVertical = NO;
     self.scrollView.pagingEnabled = YES;
     self.view.backgroundColor = [UIColor lightGrayColor];
-    [self.view addSubview:self.scrollView];
     
-    [self testCase1];
+    self.freeBoardView = [[FreeStyleBoardView alloc] initWithBlocks:self.allBlocks];
+    
+//    [self testCase1];
+    [self freeStyle];
+    
 }
 
 - (void)segSelected:(id)sender
 {
     NSInteger index = self.segCtrl.selectedSegmentIndex;
+    
+    if (index != 0) {
+        [self.freeBoardView removeFromSuperview];
+        [self.segCtrl removeFromSuperview];
+    } else {
+        [self.scrollView removeFromSuperview];
+        [self.segCtrl removeFromSuperview];
+    }
+    
     switch (index) {
         case 0:
-            [self testCase1];
+            [self freeStyle];
             break;
         case 1:
-            [self testCase2];
+            [self testCase1];
             break;
         case 2:
-            [self testCase3];
+            [self testCase2];
             break;
         case 3:
+            [self testCase3];
+            break;
+        case 4:
             [self testCase4];
             break;
         default:
             break;
     }
+}
+
+- (void)freeStyle
+{
+    [self.view addSubview:self.freeBoardView];
+    [self.view addSubview:self.segCtrl];
 }
 
 - (void)testCase1

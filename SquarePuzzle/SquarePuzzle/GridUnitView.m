@@ -7,6 +7,7 @@
 //
 
 #import "GridUnitView.h"
+#import "Global.h"
 #import <QuartzCore/QuartzCore.h>
 
 @implementation GridUnitView
@@ -22,7 +23,7 @@
 
 - (void)drawRect:(CGRect)rect
 {
-    self.layer.borderWidth = 1.f;
+    self.layer.borderWidth = kLineWidth;
     self.layer.borderColor = [UIColor blackColor].CGColor;
 }
 

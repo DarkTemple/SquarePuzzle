@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SquareBlock.h"
 
 @interface FreeStyleBoardView : UIView
+
+- (instancetype)initWithBlocks:(NSArray <SquareBlock *> *)blocks;
 
 @end

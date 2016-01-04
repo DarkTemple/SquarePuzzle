@@ -4,7 +4,10 @@
 
 #ifdef __OBJC__
 
-//#define FIND_ALL_SOLUTIONS
+static const CGFloat kLineWidth = 1.f;
+
+
+#define FIND_ALL_SOLUTIONS
 
 // 放置之后DFS检查最小连通空间
 #define OPTIMIZE_ARRANGE_CONNECTED_DFS

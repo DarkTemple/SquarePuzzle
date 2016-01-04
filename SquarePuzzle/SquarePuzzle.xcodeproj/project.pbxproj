@@ -16,8 +16,11 @@
 		3C1A731E1C2CE682007568E6 /* SquarePuzzleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A731D1C2CE682007568E6 /* SquarePuzzleTests.m */; };
 		3C1A73291C2CE682007568E6 /* SquarePuzzleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A73281C2CE682007568E6 /* SquarePuzzleUITests.m */; };
 		3C1A73381C2CF15A007568E6 /* SquarePuzzleSolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A73371C2CF15A007568E6 /* SquarePuzzleSolver.m */; };
+		3C758C181C3A40EE0096CCB4 /* SquareBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C758C171C3A40EE0096CCB4 /* SquareBlock.m */; };
+		3C758C1C1C3A42770096CCB4 /* NSMutableArray+SquarePuzzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C758C1B1C3A42770096CCB4 /* NSMutableArray+SquarePuzzle.m */; };
+		3C758C201C3A46F80096CCB4 /* BlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C758C1F1C3A46F80096CCB4 /* BlockView.m */; };
+		3C758C231C3A5E680096CCB4 /* FreeStyleBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C758C221C3A5E680096CCB4 /* FreeStyleBoardView.m */; };
 		BBBBEB071C2FB79D000A6F3A /* GridUnitView.m in Sources */ = {isa = PBXBuildFile; fileRef = BBBBEB061C2FB79D000A6F3A /* GridUnitView.m */; };
-		BBBBEB0A1C2FBDCC000A6F3A /* XLCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = BBBBEB091C2FBDCC000A6F3A /* XLCycleScrollView.m */; };
 		BBBBEB0D1C2FD152000A6F3A /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = BBBBEB0C1C2FD152000A6F3A /* MBProgressHUD.m */; };
 		BBBBEB101C2FD774000A6F3A /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = BBBBEB0F1C2FD774000A6F3A /* UIView+Toast.m */; };
 /* End PBXBuildFile section */
@@ -58,10 +61,17 @@
 		3C1A732A1C2CE682007568E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C1A73361C2CF15A007568E6 /* SquarePuzzleSolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SquarePuzzleSolver.h; sourceTree = "<group>"; };
 		3C1A73371C2CF15A007568E6 /* SquarePuzzleSolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SquarePuzzleSolver.m; sourceTree = "<group>"; };
+		3C758C161C3A40EE0096CCB4 /* SquareBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SquareBlock.h; sourceTree = "<group>"; };
+		3C758C171C3A40EE0096CCB4 /* SquareBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SquareBlock.m; sourceTree = "<group>"; };
+		3C758C191C3A41F80096CCB4 /* Global.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
+		3C758C1A1C3A42770096CCB4 /* NSMutableArray+SquarePuzzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SquarePuzzle.h"; sourceTree = "<group>"; };
+		3C758C1B1C3A42770096CCB4 /* NSMutableArray+SquarePuzzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SquarePuzzle.m"; sourceTree = "<group>"; };
+		3C758C1E1C3A46F80096CCB4 /* BlockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockView.h; sourceTree = "<group>"; };
+		3C758C1F1C3A46F80096CCB4 /* BlockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockView.m; sourceTree = "<group>"; };
+		3C758C211C3A5E680096CCB4 /* FreeStyleBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FreeStyleBoardView.h; sourceTree = "<group>"; };
+		3C758C221C3A5E680096CCB4 /* FreeStyleBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FreeStyleBoardView.m; sourceTree = "<group>"; };
 		BBBBEB051C2FB79D000A6F3A /* GridUnitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridUnitView.h; sourceTree = "<group>"; };
 		BBBBEB061C2FB79D000A6F3A /* GridUnitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridUnitView.m; sourceTree = "<group>"; };
-		BBBBEB081C2FBDCC000A6F3A /* XLCycleScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XLCycleScrollView.h; sourceTree = "<group>"; };
-		BBBBEB091C2FBDCC000A6F3A /* XLCycleScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XLCycleScrollView.m; sourceTree = "<group>"; };
 		BBBBEB0B1C2FD152000A6F3A /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		BBBBEB0C1C2FD152000A6F3A /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		BBBBEB0E1C2FD774000A6F3A /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
@@ -116,7 +126,9 @@
 		3C1A73021C2CE682007568E6 /* SquarePuzzle */ = {
 			isa = PBXGroup;
 			children = (
-				BBACE5081C36C30F002747D0 /* TestCase */,
+				3C758C1D1C3A46E30096CCB4 /* Views */,
+				3C758C161C3A40EE0096CCB4 /* SquareBlock.h */,
+				3C758C171C3A40EE0096CCB4 /* SquareBlock.m */,
 				3C1A73361C2CF15A007568E6 /* SquarePuzzleSolver.h */,
 				3C1A73371C2CF15A007568E6 /* SquarePuzzleSolver.m */,
 				3C1A73061C2CE682007568E6 /* AppDelegate.h */,
@@ -129,6 +141,8 @@
 				3C1A73141C2CE682007568E6 /* Info.plist */,
 				BBACE5071C36C2F5002747D0 /* Utils */,
 				3C1A73031C2CE682007568E6 /* Supporting Files */,
+				3C758C1A1C3A42770096CCB4 /* NSMutableArray+SquarePuzzle.h */,
+				3C758C1B1C3A42770096CCB4 /* NSMutableArray+SquarePuzzle.m */,
 			);
 			path = SquarePuzzle;
 			sourceTree = "<group>";
@@ -136,6 +150,7 @@
 		3C1A73031C2CE682007568E6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3C758C191C3A41F80096CCB4 /* Global.h */,
 				3C1A73041C2CE682007568E6 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -159,26 +174,28 @@
 			path = SquarePuzzleUITests;
 			sourceTree = "<group>";
 		};
-		BBACE5071C36C2F5002747D0 /* Utils */ = {
+		3C758C1D1C3A46E30096CCB4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				BBBBEB051C2FB79D000A6F3A /* GridUnitView.h */,
 				BBBBEB061C2FB79D000A6F3A /* GridUnitView.m */,
+				3C758C1E1C3A46F80096CCB4 /* BlockView.h */,
+				3C758C1F1C3A46F80096CCB4 /* BlockView.m */,
+				3C758C211C3A5E680096CCB4 /* FreeStyleBoardView.h */,
+				3C758C221C3A5E680096CCB4 /* FreeStyleBoardView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		BBACE5071C36C2F5002747D0 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
 				BBBBEB0B1C2FD152000A6F3A /* MBProgressHUD.h */,
 				BBBBEB0C1C2FD152000A6F3A /* MBProgressHUD.m */,
 				BBBBEB0E1C2FD774000A6F3A /* UIView+Toast.h */,
 				BBBBEB0F1C2FD774000A6F3A /* UIView+Toast.m */,
-				BBBBEB081C2FBDCC000A6F3A /* XLCycleScrollView.h */,
-				BBBBEB091C2FBDCC000A6F3A /* XLCycleScrollView.m */,
 			);
 			name = Utils;
-			sourceTree = "<group>";
-		};
-		BBACE5081C36C30F002747D0 /* TestCase */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = TestCase;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -311,13 +328,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C758C231C3A5E680096CCB4 /* FreeStyleBoardView.m in Sources */,
 				BBBBEB101C2FD774000A6F3A /* UIView+Toast.m in Sources */,
-				BBBBEB0A1C2FBDCC000A6F3A /* XLCycleScrollView.m in Sources */,
 				3C1A730B1C2CE682007568E6 /* ViewController.m in Sources */,
 				3C1A73381C2CF15A007568E6 /* SquarePuzzleSolver.m in Sources */,
 				3C1A73081C2CE682007568E6 /* AppDelegate.m in Sources */,
+				3C758C201C3A46F80096CCB4 /* BlockView.m in Sources */,
+				3C758C181C3A40EE0096CCB4 /* SquareBlock.m in Sources */,
 				3C1A73051C2CE682007568E6 /* main.m in Sources */,
 				BBBBEB071C2FB79D000A6F3A /* GridUnitView.m in Sources */,
+				3C758C1C1C3A42770096CCB4 /* NSMutableArray+SquarePuzzle.m in Sources */,
 				BBBBEB0D1C2FD152000A6F3A /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -457,6 +477,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yifeng Wu (45D4HL33CE)";
 				INFOPLIST_FILE = SquarePuzzle/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alipay.test.SquarePuzzle;
@@ -468,6 +489,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yifeng Wu (45D4HL33CE)";
 				INFOPLIST_FILE = SquarePuzzle/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alipay.test.SquarePuzzle;

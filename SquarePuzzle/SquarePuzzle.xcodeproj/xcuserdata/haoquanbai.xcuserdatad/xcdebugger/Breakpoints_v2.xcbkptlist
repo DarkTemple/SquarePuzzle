@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SquarePuzzle/SquarePuzzleSolver.m"
-            timestampString = "473332618.659849"
+            timestampString = "473580403.640477"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "574"
-            endingLineNumber = "574"
+            startingLineNumber = "286"
+            endingLineNumber = "286"
             landmarkName = "-arrangeBlock:atX:Y:"
             landmarkType = "5">
          </BreakpointContent>
@@ -35,13 +35,45 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SquarePuzzle/SquarePuzzleSolver.m"
-            timestampString = "473332618.659849"
+            filePath = "SquarePuzzle/ViewController.m"
+            timestampString = "473592612.867803"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
-            landmarkName = "-printSquare"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "-tapBlock:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SquarePuzzle/BlockView.m"
+            timestampString = "473602918.039809"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "-tapBlock1:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SquarePuzzle/BlockView.m"
+            timestampString = "473602632.166282"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "-moveBlock:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

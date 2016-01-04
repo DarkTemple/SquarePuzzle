@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GridUnitView.h"
 
+@class SquareBlock;
 @interface BlockView : UIView
+
+- (instancetype)initWithSquare:(SquareBlock *)block gridWidth:(CGFloat)gridWidth;
 
 @end
