@@ -11,7 +11,9 @@
 
 @class SquareBlock;
 @interface BlockView : UIView
+@property (nonatomic) CGPoint startPoint;
 
 - (instancetype)initWithSquare:(SquareBlock *)block gridWidth:(CGFloat)gridWidth;
+- (void)setBoardStartPoint:(CGPoint)startPoint;
 
 @end

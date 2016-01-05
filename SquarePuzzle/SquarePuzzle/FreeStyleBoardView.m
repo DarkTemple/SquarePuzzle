@@ -31,7 +31,7 @@ static const int height = 5;
         // draw board
         CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
         CGFloat gridWidth = (screenWidth - 60.f)/width;
-        _boardStartPoint = CGPointMake(30, 200);
+        _boardStartPoint = CGPointMake(30, 100);
         CGFloat maxY = 0;
         
         for (int i=0; i<height+1; i++) {
@@ -47,19 +47,15 @@ static const int height = 5;
             [self addSubview:yLine];
         }
         
-        // add scroll view
-//        _blockScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(20, CGRectGetMaxY(self.frame)-200, CGRectGetWidth(self.frame)-40, 180)];
-//        _blockScrollView.layer.borderWidth = 1;
-//        [self addSubview:_blockScrollView];
-        
         CGFloat x = 10.f;
-        CGFloat y = maxY + 10.f;
+        CGFloat y = maxY + 20.f;
         
         for (int i=0; i<self.allBlocks.count; i++) {
-            UIView *blockView = [self.allBlocks[i] generateBlockViewWithWidth:gridWidth];
+            BlockView *blockView = [self.allBlocks[i] generateBlockViewWithWidth:gridWidth];
+            blockView.startPoint = _boardStartPoint;
             CGFloat width = CGRectGetWidth(blockView.frame);
             CGFloat height = CGRectGetHeight(blockView.frame);
-            blockView.frame = CGRectMake(x+(i%3)*gridWidth*5, i/3*gridWidth*3+y, width, height);
+            blockView.frame = CGRectMake(x+(i%3)*gridWidth*5, i/3*gridWidth*4+y, width, height);
             [self addSubview:blockView];
         }
     }

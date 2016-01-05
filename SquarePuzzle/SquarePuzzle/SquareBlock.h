@@ -24,6 +24,7 @@ typedef struct {
 } SPPoint;
 
 @interface SquareUnit : NSObject <NSCopying> {
+@public
     SquareUnitState _unitState;
 }
 

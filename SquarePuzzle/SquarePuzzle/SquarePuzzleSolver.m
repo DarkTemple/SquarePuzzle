@@ -344,17 +344,25 @@ OUT_HERE:
 {
 #ifdef OPTIMEZE_ENUMETATE_ARC
     __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
-#else
-    NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
-#endif
-    
-    for (int i=0; i<self.height; i++) {
-        for (int j=0; j<self.width; j++) {
-            if (squareBoardArr[i][j].unitState == SquareUnitStateVisited) {
-                squareBoardArr[i][j].unitState = SquareUnitStateEmpty;
+    int height = self.height;
+    int width = self.width;
+    for (int i=0; i<height; i++) {
+        __unsafe_unretained NSArray <SquareUnit *> *tempArr = squareBoardArr[i];
+        for (int j=0; j<width; j++) {
+            if (tempArr[j].unitState == SquareUnitStateVisited) {
+                tempArr[j].unitState = SquareUnitStateEmpty;
             }
         }
     }
+#else
+    for (int i=0; i<self.height; i++) {
+        for (int j=0; j<self.width; j++) {
+            if (self.unitArr[i][j].unitState == SquareUnitStateVisited) {
+                self.unitArr[i][j].unitState = SquareUnitStateEmpty;
+            }
+        }
+    }
+#endif
 }
 
 - (void)removeBlock:(SquareBlock *)block
@@ -375,16 +383,33 @@ OUT_HERE:
     
 #ifdef OPTIMEZE_ENUMETATE_ARC
     __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
+    NSInteger blockID = block.blockID;
+    for (int i=startY; i<startY+height; i++) {
+        __unsafe_unretained NSArray <SquareUnit *> *tempArr = squareBoardArr[i];
+        for (int j=startX; j<startX+width; j++) {
+            NSInteger tmpblockID = tempArr[j].blockID;
+            if (tmpblockID == blockID) {
+                [tempArr[j] reset];
+                
+    #ifdef OPTIMIZE_ARRANGE_SEARCH_RANGE
+                if (_minValidXTable[i] > j) {
+                    _minValidXTable[i] = j;
+                }
+                
+                if (_maxValidXTable[i] < j) {
+                    _maxValidXTable[i] = j;
+                }
+    #endif
+            }
+        }
+    }
 #else
-    NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
-#endif
-    
     NSInteger blockID = block.blockID;
     for (int i=startY; i<startY+height; i++) {
         for (int j=startX; j<startX+width; j++) {
-            NSInteger tmpblockID = squareBoardArr[i][j].blockID;
+            NSInteger tmpblockID = self.unitArr[i][j].blockID;
             if (tmpblockID == blockID) {
-                [squareBoardArr[i][j] reset];
+                [self.unitArr[i][j] reset];
                 
 #ifdef OPTIMIZE_ARRANGE_SEARCH_RANGE
                 if (_minValidXTable[i] > j) {
@@ -398,6 +423,7 @@ OUT_HERE:
             }
         }
     }
+#endif
 }
 
 - (BOOL)DFSMinConnectedCountLimit:(int)limit

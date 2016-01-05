@@ -62,24 +62,43 @@ static inline void swap(int *a, int *b) {
 {
 #ifdef OPTIMEZE_ENUMETATE_ARC
     __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
-#else
-    NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
-#endif
-    
     NSInteger signature = 0;
-    int n = (int)MAX(self.width, self.height);
-    for (int i=(int)self.startPoint.y; i<self.startPoint.y+n; i++) {
-        for (int j=(int)self.startPoint.x; j<self.startPoint.x+n; j++) {
-            int x = 0;
-            if (i < self.startPoint.y+self.height && j < self.startPoint.x+self.width) {
-                x = ((squareBoardArr[i][j].unitState == SquareUnitStateFull) ? 1 : 0);
+    int width = self.width, height = self.height;
+    SPPoint startPoint = self.startPoint;
+    int n = (int)MAX(width, height);
+    for (int i=(int)startPoint.y; i<startPoint.y+n; i++) {
+        if (i < startPoint.y+height) {
+            __unsafe_unretained NSArray <SquareUnit *> *tempArr = squareBoardArr[i];
+            for (int j=(int)startPoint.x; j<startPoint.x+n; j++) {
+                int x = 0;
+                if (j < startPoint.x+width) {
+                    x = ((tempArr[j].unitState == SquareUnitStateFull) ? 1 : 0);
+                }
+                
+                signature = (signature << 1) + x;
             }
-            
-            signature = (signature << 1) + x;
         }
     }
     
     return signature;
+#else
+    NSInteger signature = 0;
+    int n = (int)MAX(self.width, self.height);
+    for (int i=(int)self.startPoint.y; i<self.startPoint.y+n; i++) {
+        if (i < self.startPoint.y+self.height) {
+            for (int j=(int)self.startPoint.x; j<self.startPoint.x+n; j++) {
+                int x = 0;
+                if (j < self.startPoint.x+self.width) {
+                    x = ((self.unitArr[i][j].unitState == SquareUnitStateFull) ? 1 : 0);
+                }
+                
+                signature = (signature << 1) + x;
+            }
+        }
+    }
+    
+    return signature;
+#endif
 }
 
 - (int)width

@@ -12,6 +12,9 @@
 #import "UIView+Toast.h"
 #import "FreeStyleBoardView.h"
 
+//#define <#macro#>
+
+
 typedef void (*Func)(id sender, SEL sel, ...);
 
 static const NSTimeInterval kToastDuration = 1.f;
@@ -95,26 +98,27 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 {
     START
     int n = 10;
-    int loop = 100000;
+    int loop = 500000;
     SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:n height:n minBlockUnitCount:5];
     __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = solver.unitArr;
-    
+    int height = solver.height;
+    int width = solver.width;
     
     for (int l=0; l<loop; l++) {
-        for (int i=0; i<solver.height; i++) {
-            for (int j=0; j<solver.width; j++) {
-                solver.unitArr[i][j].unitState = SquareUnitStateVisited;
+        for (int i=0; i<height; i++) {
+            __unsafe_unretained NSArray <SquareUnit *> *tempArr = squareBoardArr[i];
+            for (int j=0; j<width; j++) {
+                __unsafe_unretained SquareUnit *squareBlock = tempArr[j];
+                squareBlock->_unitState = SquareUnitStateVisited;
+//                tempArr[j].unitState = SquareUnitStateVisited;
+//                [tempArr[j] setUnitState:SquareUnitStateVisited];
 //                squareBoardArr[i][j].unitState = SquareUnitStateVisited;
+//                solver.unitArr[i][j].unitState = SquareUnitStateVisited;
             }
         }
     }
     
     END
-}
-
-- (void)tapBlock:(UITapGestureRecognizer *)tapGR
-{
-    
 }
 
 - (void)viewDidLoad {
@@ -142,7 +146,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
     self.scrollView.alwaysBounceVertical = NO;
     self.scrollView.pagingEnabled = YES;
-    self.view.backgroundColor = [UIColor lightGrayColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     self.freeBoardView = [[FreeStyleBoardView alloc] initWithBlocks:self.allBlocks];
     

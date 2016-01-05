@@ -81,9 +81,12 @@
         self.alpha = 1.f;
     }
     
-//    if (panGR.state == UIGestureRecognizerStateEnded) {
-        NSLog(@"%@", NSStringFromCGPoint(self.frame.origin));
-//    }
+    if (panGR.state == UIGestureRecognizerStateEnded) {
+//        NSLog(@"%@", NSStringFromCGPoint(self.frame.origin));
+        CGFloat x = self.startPoint.x + roundf(((CGRectGetMinX(self.frame) - self.startPoint.x) / self.gridWidth)) * self.gridWidth;
+        CGFloat y = self.startPoint.y + roundf(((CGRectGetMinY(self.frame) - self.startPoint.y) / self.gridWidth)) * self.gridWidth;
+        self.frame = CGRectMake(x, y, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
+    }
 }
 
 - (void)tapBlock1:(UITapGestureRecognizer *)tapGR
@@ -99,5 +102,6 @@
     [self.block reverseBlockInplace];
     [self layoutSubviews];
 }
+
 
 @end
