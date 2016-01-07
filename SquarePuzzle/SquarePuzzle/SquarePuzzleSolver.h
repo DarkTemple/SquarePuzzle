@@ -14,6 +14,8 @@
 
 @interface SquarePuzzleSolver : NSObject <SquareMatrixProtocol>
 
+@property (nonatomic, strong) NSMutableSet <NSString *> *solutions;
+
 - (instancetype)initWithBorderWidth:(int)width height:(int)height minBlockUnitCount:(int)minUnitCount;
 - (void)addSquareUnit:(SquareBlock *)block;
 - (BOOL)arrangeBlock:(SquareBlock *)block atX:(int)x Y:(int)y;
@@ -21,5 +23,5 @@
 - (void)solvePuzzle;
 - (void)printAllSolutions;
 - (NSArray <UIView *> *)generateSolutionGridViews;
-
+- (UIView *)generateSolutionGridViewWithSolString:(NSString *)solStr;
 @end

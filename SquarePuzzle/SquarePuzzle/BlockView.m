@@ -8,6 +8,9 @@
 
 #import "BlockView.h"
 #import "SquareBlock.h"
+#import "Global.h"
+
+static const NSInteger kGridLineTag = 31415;
 
 @interface BlockView ()
 @property (nonatomic, strong) SquareBlock *block;
@@ -67,6 +70,23 @@
             }
         }
     }
+    
+    // add x-y line
+    for (int i=startY; i<height+1; i++) {
+        UIView *xLine = [[UIView alloc] initWithFrame:CGRectMake(0, i*_gridWidth, _gridWidth*width, kLineWidth)];
+        xLine.tag = kGridLineTag;
+        xLine.backgroundColor = [UIColor blackColor];
+        [self addSubview:xLine];
+        xLine.alpha = 0;
+    }
+    
+    for (int j=startX; j<width+1; j++) {
+        UIView *yLine = [[UIView alloc] initWithFrame:CGRectMake(j*_gridWidth, 0, kLineWidth, _gridWidth*height)];
+        yLine.tag = kGridLineTag;
+        yLine.backgroundColor = [UIColor blackColor];
+        [self addSubview:yLine];
+        yLine.alpha = 0;
+    }
 }
 
 - (void)moveBlock:(UIPanGestureRecognizer *)panGR
@@ -76,13 +96,24 @@
                                          panGR.view.center.y + translation.y);
     [panGR setTranslation:CGPointZero inView:self];
     if (panGR.state == UIGestureRecognizerStateChanged) {
+        [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.tag == kGridLineTag) {
+                obj.alpha = 1.f;
+            }
+        }];
+        
         self.alpha = .3f;
     } else {
         self.alpha = 1.f;
+        
+        [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.tag == kGridLineTag) {
+                obj.alpha = 0.f;
+            }
+        }];
     }
     
     if (panGR.state == UIGestureRecognizerStateEnded) {
-//        NSLog(@"%@", NSStringFromCGPoint(self.frame.origin));
         CGFloat x = self.startPoint.x + roundf(((CGRectGetMinX(self.frame) - self.startPoint.x) / self.gridWidth)) * self.gridWidth;
         CGFloat y = self.startPoint.y + roundf(((CGRectGetMinY(self.frame) - self.startPoint.y) / self.gridWidth)) * self.gridWidth;
         self.frame = CGRectMake(x, y, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
@@ -92,16 +123,24 @@
 - (void)tapBlock1:(UITapGestureRecognizer *)tapGR
 {
     NSLog(@"Roatate clockwise!");
+#ifdef OPTIMIZE_SQUARE_ROTATE
     [self.block rotateClockwiseInplace];
+#else
+    self.block = [self.block rotateClockwise];
+#endif
+    
     [self layoutSubviews];
 }
 
 - (void)tapBlock2:(UITapGestureRecognizer *)tapGR
 {
     NSLog(@"Reverse clockwise!");
+#ifdef OPTIMIZE_SQUARE_ROTATE
     [self.block reverseBlockInplace];
+#else
+    self.block = [self.block reverseBlock];
+#endif
     [self layoutSubviews];
 }
-
 
 @end

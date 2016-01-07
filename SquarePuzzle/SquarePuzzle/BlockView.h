@@ -14,6 +14,5 @@
 @property (nonatomic) CGPoint startPoint;
 
 - (instancetype)initWithSquare:(SquareBlock *)block gridWidth:(CGFloat)gridWidth;
-- (void)setBoardStartPoint:(CGPoint)startPoint;
 
 @end

@@ -135,10 +135,9 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 
 //    return;
     
-    
     [self _initAllBlocks];
     
-    self.segCtrl = [[UISegmentedControl alloc] initWithItems:@[@"FreeStyle", @"Case1", @"Case2", @"Case3", @"Case4"]];
+    self.segCtrl = [[UISegmentedControl alloc] initWithItems:@[@"FreeStyle", @"Case1", @"Case2", @"Case3", @"Solutions"]];
     [self.segCtrl addTarget:self action:@selector(segSelected:) forControlEvents:UIControlEventValueChanged];
     self.segCtrl.frame = CGRectMake((CGRectGetWidth(self.view.frame)-CGRectGetWidth(self.segCtrl.frame))/2, 30, CGRectGetWidth(self.segCtrl.frame), CGRectGetHeight(self.segCtrl.frame));
     self.segCtrl.selectedSegmentIndex = 0;
@@ -175,13 +174,13 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
             [self testCase1];
             break;
         case 2:
-            [self testCase2];
-            break;
-        case 3:
             [self testCase3];
             break;
-        case 4:
+        case 3:
             [self testCase4];
+            break;
+        case 4:
+            [self showAllSolutions];
             break;
         default:
             break;
@@ -192,6 +191,65 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
 {
     [self.view addSubview:self.freeBoardView];
     [self.view addSubview:self.segCtrl];
+}
+
+- (void)showAllSolutions
+{
+    [self.scrollView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj removeFromSuperview];
+    }];
+    
+    [self.scrollView removeFromSuperview];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:12 height:5 minBlockUnitCount:5];
+        [self.allBlocks enumerateObjectsUsingBlock:^(SquareBlock * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [solver addSquareUnit:obj];
+        }];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
+            NSMutableSet *allSols = [NSMutableSet set];
+            NSString *contentPath = [[NSBundle mainBundle] pathForResource:@"AllSolutions" ofType:@"txt"];
+            NSString *txtContent = [NSString stringWithContentsOfFile:contentPath encoding:NSUTF8StringEncoding error:nil];
+            
+            static const int kShowAllSolsCount = 100;
+            NSArray <NSString *> *allRawLines = [txtContent componentsSeparatedByString:@"\n"];
+            [allRawLines enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSString *solutionString = [obj substringFromIndex:[obj rangeOfString:@"]"].location+2];
+                [allSols addObject:solutionString];
+                
+                if (idx > kShowAllSolsCount) {
+                    *stop = YES;
+                }
+            }];
+            
+            [solver setSolutions:allSols];
+            
+            self.allSolViews = [solver generateSolutionGridViews];
+            NSInteger solCount = self.allSolViews.count;
+            self.scrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+            self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame)*solCount, 0);
+            [self.allSolViews enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                CGFloat yOffset = (CGRectGetHeight(self.view.frame)-CGRectGetHeight(obj.frame))/2;
+                CGFloat xOffset = (CGRectGetWidth(self.view.frame)-CGRectGetWidth(obj.frame))/2;
+                obj.frame = CGRectMake(CGRectGetWidth(self.view.frame)*idx+xOffset, yOffset, obj.frame.size.width, obj.frame.size.height);
+                [self.scrollView addSubview:obj];
+                UILabel *label = [[UILabel alloc] init];
+                label.font = [UIFont systemFontOfSize:17.f];
+                [label setText:[NSString stringWithFormat:@"%ld", idx+1]];
+                [label sizeToFit];
+                label.frame = CGRectMake(CGRectGetMinX(obj.frame), CGRectGetMaxY(obj.frame)+10, CGRectGetWidth(label.frame), CGRectGetHeight(label.frame));
+                [self.scrollView addSubview:label];
+            }];
+            
+            [self.scrollView setContentOffset:CGPointZero];
+            [self.view addSubview:self.scrollView];
+            [self.view addSubview:self.segCtrl];
+        });
+    });
 }
 
 - (void)testCase1
@@ -369,6 +427,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     
     [self.scrollView removeFromSuperview];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:12 height:5 minBlockUnitCount:5];
@@ -385,6 +444,8 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
+            
             self.allSolViews = [solver generateSolutionGridViews];
             NSInteger solCount = self.allSolViews.count;
             self.scrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
@@ -437,7 +498,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][3].unitState = SquareUnitStateFull;
     SquareBlock *block2 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:4 height:2];
     block2.blockID = 2;
-    block2.blockColor = [UIColor colorWithRed:241/255.f green:58/255.f blue:1/255.f alpha:1];
+    block2.blockColor = [UIColor colorWithRed:241/255.f green:99/255.f blue:1/255.f alpha:1];
     
     // block3
     shapeArr = [NSMutableArray squareArrayWithWidth:3 height:2];
@@ -448,7 +509,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     shapeArr[1][2].unitState = SquareUnitStateFull;
     SquareBlock *block3 = [[SquareBlock alloc] initWithSquarShapeArr:shapeArr width:3 height:2];
     block3.blockID = 3;
-    block3.blockColor = [UIColor colorWithRed:254/255.f green:227/255.f blue:34/255.f alpha:1];
+    block3.blockColor = [UIColor colorWithRed:211/255.f green:178/255.f blue:67/255.f alpha:1];
     
     // block4
     shapeArr = [NSMutableArray squareArrayWithWidth:3 height:3];

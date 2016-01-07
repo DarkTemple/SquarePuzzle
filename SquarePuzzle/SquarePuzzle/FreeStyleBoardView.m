@@ -11,6 +11,8 @@
 static const int width = 12;
 static const int height = 5;
 
+static const int kLineViewTag = 31415;
+
 @interface FreeStyleBoardView ()
 @property (nonatomic, strong) NSMutableArray <SquareBlock *> *allBlocks;
 //@property (nonatomic, strong) UIScrollView *blockScrollView;
@@ -28,25 +30,24 @@ static const int height = 5;
         }];
         
         self.frame = [UIScreen mainScreen].bounds;
+        
+        // add stepper
+        UIStepper *stepper = [[UIStepper alloc] init];
+        [stepper addTarget:self action:@selector(stepperChanged:) forControlEvents:UIControlEventValueChanged];
+        stepper.value = 12;
+        stepper.minimumValue = 3;
+        stepper.maximumValue = 12;
+        stepper.frame = CGRectMake(30, 62, 100, 100);
+        [self addSubview:stepper];
+        
         // draw board
         CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
         CGFloat gridWidth = (screenWidth - 60.f)/width;
         _boardStartPoint = CGPointMake(30, 100);
-        CGFloat maxY = 0;
         
-        for (int i=0; i<height+1; i++) {
-            UIView *xLine = [[UIView alloc] initWithFrame:CGRectMake(_boardStartPoint.x, _boardStartPoint.y+i*gridWidth, (screenWidth - 60.f), kLineWidth)];
-            xLine.backgroundColor = [UIColor blackColor];
-            [self addSubview:xLine];
-            maxY = CGRectGetMaxY(xLine.frame);
-        }
+        [self drawGridLinesWithWidth:12];
 
-        for (int i=0; i<width+1; i++) {
-            UIView *yLine = [[UIView alloc] initWithFrame:CGRectMake(_boardStartPoint.x+i*gridWidth, _boardStartPoint.y, kLineWidth, gridWidth*height)];
-            yLine.backgroundColor = [UIColor blackColor];
-            [self addSubview:yLine];
-        }
-        
+        CGFloat maxY = _boardStartPoint.y + height*gridWidth;
         CGFloat x = 10.f;
         CGFloat y = maxY + 20.f;
         
@@ -61,6 +62,44 @@ static const int height = 5;
     }
     
     return self;
+}
+
+- (void)drawGridLinesWithWidth:(int)width
+{
+    [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.tag == kLineViewTag) {
+            [obj removeFromSuperview];
+        }
+    }];
+    
+    // draw board
+    static const int kMaxWidth = 12;
+    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+    CGFloat gridWidth = (screenWidth - 60.f)/kMaxWidth;
+    _boardStartPoint = CGPointMake(30, 100);
+    CGFloat maxY = 0;
+    
+    for (int i=0; i<height+1; i++) {
+        UIView *xLine = [[UIView alloc] initWithFrame:CGRectMake(_boardStartPoint.x, _boardStartPoint.y+i*gridWidth, gridWidth*width, kLineWidth)];
+        xLine.tag = kLineViewTag;
+        xLine.backgroundColor = [UIColor blackColor];
+        [self addSubview:xLine];
+        maxY = CGRectGetMaxY(xLine.frame);
+    }
+    
+    for (int i=0; i<width+1; i++) {
+        UIView *yLine = [[UIView alloc] initWithFrame:CGRectMake(_boardStartPoint.x+i*gridWidth, _boardStartPoint.y, kLineWidth, gridWidth*height)];
+        yLine.tag = kLineViewTag;
+        yLine.backgroundColor = [UIColor blackColor];
+        [self addSubview:yLine];
+    }
+
+}
+
+- (void)stepperChanged:(id)sender
+{
+    UIStepper *stepper = (UIStepper *)sender;
+    [self drawGridLinesWithWidth:stepper.value];
 }
 
 @end

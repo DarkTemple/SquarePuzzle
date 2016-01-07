@@ -65,7 +65,6 @@ static inline int maxInRange(int *arr, int start, int len) {
 
 @property (nonatomic, strong) NSArray <NSArray <SquareUnit *> *> *squareBoardArr;
 @property (nonatomic, strong) NSMutableArray <SquareBlock *> *allBlocks;
-@property (nonatomic, strong) NSMutableSet <NSString *> *solutions;
 @property (nonatomic) int minUnitCount;
 @end
 
@@ -174,8 +173,8 @@ static inline int maxInRange(int *arr, int start, int len) {
     arrangeBlksCounter++;
     
     if (!blocks.count) {
-        [self.solutions addObject:[self blockArrangement2String]];
-//        NSLog(@"find one solution!\n");
+        NSString *solString = [self blockArrangement2String];
+        [self.solutions addObject:solString];
 //        [self printSquare];
         return;
     }

@@ -16,6 +16,7 @@
 		3C1A731E1C2CE682007568E6 /* SquarePuzzleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A731D1C2CE682007568E6 /* SquarePuzzleTests.m */; };
 		3C1A73291C2CE682007568E6 /* SquarePuzzleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A73281C2CE682007568E6 /* SquarePuzzleUITests.m */; };
 		3C1A73381C2CF15A007568E6 /* SquarePuzzleSolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A73371C2CF15A007568E6 /* SquarePuzzleSolver.m */; };
+		3C5BBA591C3E2EDA00EF069F /* AllSolutions.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C5BBA581C3E2EDA00EF069F /* AllSolutions.txt */; };
 		3C758C181C3A40EE0096CCB4 /* SquareBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C758C171C3A40EE0096CCB4 /* SquareBlock.m */; };
 		3C758C1C1C3A42770096CCB4 /* NSMutableArray+SquarePuzzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C758C1B1C3A42770096CCB4 /* NSMutableArray+SquarePuzzle.m */; };
 		3C758C201C3A46F80096CCB4 /* BlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C758C1F1C3A46F80096CCB4 /* BlockView.m */; };
@@ -61,6 +62,7 @@
 		3C1A732A1C2CE682007568E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C1A73361C2CF15A007568E6 /* SquarePuzzleSolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SquarePuzzleSolver.h; sourceTree = "<group>"; };
 		3C1A73371C2CF15A007568E6 /* SquarePuzzleSolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SquarePuzzleSolver.m; sourceTree = "<group>"; };
+		3C5BBA581C3E2EDA00EF069F /* AllSolutions.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AllSolutions.txt; sourceTree = "<group>"; };
 		3C758C161C3A40EE0096CCB4 /* SquareBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SquareBlock.h; sourceTree = "<group>"; };
 		3C758C171C3A40EE0096CCB4 /* SquareBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SquareBlock.m; sourceTree = "<group>"; };
 		3C758C191C3A41F80096CCB4 /* Global.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 		3C1A73031C2CE682007568E6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3C5BBA581C3E2EDA00EF069F /* AllSolutions.txt */,
 				3C758C191C3A41F80096CCB4 /* Global.h */,
 				3C1A73041C2CE682007568E6 /* main.m */,
 			);
@@ -304,6 +307,7 @@
 				3C1A73131C2CE682007568E6 /* LaunchScreen.storyboard in Resources */,
 				3C1A73101C2CE682007568E6 /* Assets.xcassets in Resources */,
 				3C1A730E1C2CE682007568E6 /* Main.storyboard in Resources */,
+				3C5BBA591C3E2EDA00EF069F /* AllSolutions.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
