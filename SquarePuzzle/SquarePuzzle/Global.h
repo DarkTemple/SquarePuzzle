@@ -13,6 +13,8 @@ static const CGFloat kLineWidth = 1.f;
 #define OPTIMIZE_ARRANGE_SEARCH_RANGE
 //// 放置之后DFS检查最小连通空间
 #define OPTIMIZE_ARRANGE_CONNECTED_DFS
+// DFS搜索空间的优化（只搜索block周围及内部空白点）
+#define OPTIMIZE_DFS_SEARCH_POINT
 //// block变形去重
 #define OPTIMIZE_BLOCK_TRANSFORM_DUP
 // self.width, self.height 变量存储
@@ -21,8 +23,6 @@ static const CGFloat kLineWidth = 1.f;
 #define OPTIMIZE_SQUARE_ROTATE
 // remove block 搜索空间优化
 #define OPTIMIZE_BLOCK_REMOVE
-// DFS搜索空间的优化（只搜索block周围及内部空白点）
-#define OPTIMIZE_DFS_SEARCH_POINT
 // 遍历数组时候的ARC优化
 #define OPTIMEZE_ENUMETATE_ARC
 // objc call 优化为 纯C call

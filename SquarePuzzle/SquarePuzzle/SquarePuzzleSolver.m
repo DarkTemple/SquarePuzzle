@@ -94,7 +94,7 @@ static inline int maxInRange(int *arr, int start, int len) {
         _squareBoardArr = squareArr;
         _allBlocks = [NSMutableArray array];
         _minUnitCount = minUnitCount;
-        _solutions = [NSMutableSet set];
+        _solutions = [NSMutableArray array];
         arrangeBlksIMP = [self methodForSelector:@selector(arrangeBlocks:)];
         arrangeBlksSEL = @selector(arrangeBlocks:);
         arrangeXYIMP = [self methodForSelector:@selector(arrangeBlock:atX:Y:)];
@@ -184,7 +184,7 @@ static inline int maxInRange(int *arr, int start, int len) {
     [blocks removeObject:block];
     
 #ifdef OPTIMIZE_BLOCK_TRANSFORM_DUP
-    NSMutableSet *blockSet = [NSMutableSet set];
+    int hashTable[8] = {0};
 #endif
     for (int r=0; r<8; r++) {
         if (r == 4) {
@@ -204,11 +204,9 @@ static inline int maxInRange(int *arr, int start, int len) {
         }
       
 #ifdef OPTIMIZE_BLOCK_TRANSFORM_DUP
-        NSNumber *signature = [NSNumber numberWithInteger:[block block2HashCode]];
-        if ([blockSet containsObject:signature]) {
+        int signature = (int)[block block2HashCode];
+        if (!(addToHashTable(hashTable, 8, signature))) {
             continue;
-        } else {
-            [blockSet addObject:signature];
         }
 #endif
         
@@ -324,16 +322,13 @@ OUT_HERE:
     #endif
             [self clearVisitedFootprint];
 #endif
-            
         }
-        
         
         if (!arrange && arrangeUnit) {
             [self removeBlock:block];
         } else {
             
         }
-
     }
 
     return arrange;
@@ -551,7 +546,7 @@ OUT_HERE:
 
 - (void)printAllSolutions
 {
-    [self.solutions enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+    [self.solutions enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSLog(@"%@", obj);
     }];
 }
@@ -572,7 +567,7 @@ OUT_HERE:
 - (NSArray <UIView *> *)generateSolutionGridViews
 {
     NSMutableArray <UIView *> *allSolViews = [NSMutableArray array];
-    [self.solutions enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+    [self.solutions enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [allSolViews addObject:[self generateSolutionGridViewWithSolString:obj]];
     }];
     

@@ -91,6 +91,7 @@ static const NSInteger kGridLineTag = 31415;
 
 - (void)moveBlock:(UIPanGestureRecognizer *)panGR
 {
+    [self.superview bringSubviewToFront:self];
     CGPoint translation = [panGR translationInView:self];
     panGR.view.center = CGPointMake(panGR.view.center.x + translation.x,
                                          panGR.view.center.y + translation.y);

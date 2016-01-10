@@ -12,14 +12,11 @@
 #import "UIView+Toast.h"
 #import "FreeStyleBoardView.h"
 
-//#define <#macro#>
-
 
 typedef void (*Func)(id sender, SEL sel, ...);
 
 static const NSTimeInterval kToastDuration = 1.f;
 
-#define LOOP 90000000
 #define START { clock_t start, end; start = clock();
 #define END end = clock(); \
 printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
@@ -38,102 +35,92 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     // Do nothing...
 }
 
-- (void)testObjectiveCMethod {
-    START
-    for (NSUInteger i = 0; i < LOOP; ++i) {
-        [self _functionCall];
-    }
-    END  
-}
-
-- (void)testCCall {
-    SEL sel = @selector(_functionCall);
-    IMP imp = [self methodForSelector:@selector(_functionCall)];
-    START
-    for (NSUInteger i = 0; i < LOOP; ++i) {
-        ((void (*)(id sender, SEL sel, ...))imp)(self, sel);
-    }
-    END  
-}
-
-- (void)testArrayCountTime
+- (void)testObjcCallAndCCall
 {
-    NSInteger matrixN = 100000;
-    NSMutableArray <NSMutableArray <NSNumber *> *> *squareArr = [NSMutableArray arrayWithCapacity:matrixN];
-    for (int i=0; i<matrixN; i++) {
-        NSMutableArray <NSNumber *> *rowArr = [NSMutableArray arrayWithCapacity:matrixN];
-        for (int j=0; j<matrixN; j++) {
-            [rowArr addObject:@1];
-        }
-        
-        [squareArr addObject:rowArr];
-    }
-    
+    int const loop = 100000000;
     START
-    NSInteger testLoopCount = 100;
-    for (int k=0; k<testLoopCount; k++) {
-        for (int i=0; i<matrixN; i++) {
-            for (int j=0; j<matrixN; j++) {
-                NSUInteger l1 = squareArr.count;
-                NSUInteger l2 = squareArr[0].count;
-            }
-        }
+    for (NSUInteger i = 0; i < loop; ++i) {
+        [self _functionCall];
     }
     END
     
+    SEL sel = @selector(_functionCall);
+    IMP imp = [self methodForSelector:@selector(_functionCall)];
     START
-    NSInteger testLoopCount = 100;
-    for (int k=0; k<testLoopCount; k++) {
-        for (int i=0; i<matrixN; i++) {
-            for (int j=0; j<matrixN; j++) {
-                NSNumber *x = squareArr[i][j];
-                x = @2;
-            }
-        }
+    for (NSUInteger i = 0; i < loop; ++i) {
+        ((void (*)(id sender, SEL sel, ...))imp)(self, sel);
     }
     END
 }
 
 - (void)testMatrixVisitARC
 {
-    START
     int n = 10;
-    int loop = 500000;
+    int loop = 100000;
     SquarePuzzleSolver *solver = [[SquarePuzzleSolver alloc] initWithBorderWidth:n height:n minBlockUnitCount:5];
-    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = solver.unitArr;
     int height = solver.height;
     int width = solver.width;
-    
+
+    START
+    __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = solver.unitArr;
     for (int l=0; l<loop; l++) {
         for (int i=0; i<height; i++) {
             __unsafe_unretained NSArray <SquareUnit *> *tempArr = squareBoardArr[i];
             for (int j=0; j<width; j++) {
                 __unsafe_unretained SquareUnit *squareBlock = tempArr[j];
                 squareBlock->_unitState = SquareUnitStateVisited;
-//                tempArr[j].unitState = SquareUnitStateVisited;
-//                [tempArr[j] setUnitState:SquareUnitStateVisited];
-//                squareBoardArr[i][j].unitState = SquareUnitStateVisited;
-//                solver.unitArr[i][j].unitState = SquareUnitStateVisited;
             }
         }
     }
+    END
     
+    START
+    for (int l=0; l<loop; l++) {
+        for (int i=0; i<height; i++) {
+            for (int j=0; j<width; j++) {
+                solver.unitArr[i][j].unitState = SquareUnitStateVisited;
+            }
+        }
+    }
+    END
+}
+
+- (void)testHashSet
+{
+    int arr[] = {94, 61952, 307, 316, 409, 17604, 61952, 94};
+    int loop = 1000000;
+    
+    START
+    int hashTable[8] = {0};
+    for (int l=0; l<loop; l++) {
+        for (int i=0; i<sizeof(arr)/sizeof(arr[0]); i++) {
+            BOOL contain = !(addToHashTable(hashTable, 8, arr[i]));
+        }
+    }
+    END
+    
+    START
+    NSMutableSet *set = [NSMutableSet set];
+    for (int l=0; l<loop; l++) {
+        for (int i=0; i<sizeof(arr)/sizeof(arr[0]); i++) {
+            if ([set containsObject:@(arr[i])]) {
+                continue;
+            } else {
+                [set addObject:@(arr[i])];
+            }
+        }
+    }
     END
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-//    [self testObjectiveCMethod];
-//    [self testCCall];
-//    return;
-//    [self testArrayCountTime];
-//    return;
     
+//    [self testHashSet];
 //    [self testMatrixVisitARC];
-//    return;
-
-//    return;
+    [self testObjcCallAndCCall];
+    return;
     
     [self _initAllBlocks];
     
@@ -143,6 +130,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     self.segCtrl.selectedSegmentIndex = 0;
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
+    self.scrollView.showsHorizontalScrollIndicator = YES;
     self.scrollView.alwaysBounceVertical = NO;
     self.scrollView.pagingEnabled = YES;
     self.view.backgroundColor = [UIColor whiteColor];
@@ -211,7 +199,7 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             
-            NSMutableSet *allSols = [NSMutableSet set];
+            NSMutableArray *allSols = [NSMutableArray array];
             NSString *contentPath = [[NSBundle mainBundle] pathForResource:@"AllSolutions" ofType:@"txt"];
             NSString *txtContent = [NSString stringWithContentsOfFile:contentPath encoding:NSUTF8StringEncoding error:nil];
             

@@ -60,6 +60,7 @@ static inline void swap(int *a, int *b) {
 
 - (NSInteger)block2HashCode
 {
+//    TODO:: 这里有问题
 #ifdef OPTIMEZE_ENUMETATE_ARC
     __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
     NSInteger signature = 0;
@@ -67,20 +68,20 @@ static inline void swap(int *a, int *b) {
     SPPoint startPoint = self.startPoint;
     int n = (int)MAX(width, height);
     for (int i=(int)startPoint.y; i<startPoint.y+n; i++) {
-        if (i < startPoint.y+height) {
-            __unsafe_unretained NSArray <SquareUnit *> *tempArr = squareBoardArr[i];
-            for (int j=(int)startPoint.x; j<startPoint.x+n; j++) {
-                int x = 0;
-                if (j < startPoint.x+width) {
-                    x = ((tempArr[j].unitState == SquareUnitStateFull) ? 1 : 0);
-                }
-                
-                signature = (signature << 1) + x;
+        __unsafe_unretained NSArray <SquareUnit *> *tempArr = i < startPoint.y+height ? squareBoardArr[i] : nil;
+        for (int j=(int)startPoint.x; j<startPoint.x+n; j++) {
+            int x = 0;
+            if (i < startPoint.y+height && j < startPoint.x+width) {
+                x = ((tempArr[j].unitState == SquareUnitStateFull) ? 1 : 0);
             }
+            
+            signature = (signature << 1) + x;
         }
     }
     
     return signature;
+    
+    
 #else
     NSInteger signature = 0;
     int n = (int)MAX(self.width, self.height);

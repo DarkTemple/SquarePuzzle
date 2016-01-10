@@ -20,28 +20,26 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SquarePuzzle/SquarePuzzleSolver.m"
-            timestampString = "473503457.38426"
+            timestampString = "474005332.016133"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "576"
-            endingLineNumber = "576"
-            landmarkName = "-arrangeBlock:atX:Y:"
-            landmarkType = "5">
+            startingLineNumber = "825"
+            endingLineNumber = "825">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SquarePuzzle/SquarePuzzleSolver.m"
-            timestampString = "473503457.38426"
+            timestampString = "474005332.016133"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "826"
-            endingLineNumber = "826"
-            landmarkName = "-searchBlockWithBlockID:"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
+            landmarkName = "-arrangeBlocks:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
