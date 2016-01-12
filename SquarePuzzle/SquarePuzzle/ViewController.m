@@ -119,8 +119,8 @@ printf("Cost:%f\n", (double)(end - start) / CLOCKS_PER_SEC * 1000); }
     
 //    [self testHashSet];
 //    [self testMatrixVisitARC];
-    [self testObjcCallAndCCall];
-    return;
+//    [self testObjcCallAndCCall];
+//    return;
     
     [self _initAllBlocks];
     

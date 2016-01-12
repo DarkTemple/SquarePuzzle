@@ -60,7 +60,6 @@ static inline void swap(int *a, int *b) {
 
 - (NSInteger)block2HashCode
 {
-//    TODO:: 这里有问题
 #ifdef OPTIMEZE_ENUMETATE_ARC
     __unsafe_unretained NSArray <NSArray <SquareUnit *> *> *squareBoardArr = self.unitArr;
     NSInteger signature = 0;
