@@ -26,5 +26,5 @@ static const CGFloat kLineWidth = 1.f;
 // 遍历数组时候的ARC优化
 #define OPTIMEZE_ENUMETATE_ARC
 // objc call 优化为 纯C call
-#define OPTIMIZE_MSGSEND
+//#define OPTIMIZE_MSGSEND
 #endif
